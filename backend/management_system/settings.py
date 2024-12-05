@@ -9,8 +9,12 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'default-secret-key')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
+# Настройки аутентификации
+AUTH_USER_MODEL = "api.CustomUser"
+
 # Приложения
 INSTALLED_APPS = [
+    'apps.api', # Ваше приложение API
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -18,8 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'django_celery_beat',  # Для Celery
-    'apps.api',             # Ваше приложение API
+    'django_celery_beat', # Для Celery
 ]
 
 # Middleware
