@@ -21,6 +21,7 @@ services:
       - ./backend:/app  # Привязка директории с кодом к контейнеру
     networks:
       - app_network  # Сетевой мост для взаимодействия с другими контейнерами
+    command: sh -c "python manage.py makemigrations --noinput && python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
 
   postgres:
     image: postgres:15
