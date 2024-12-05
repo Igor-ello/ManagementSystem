@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend  # Путь к Dockerfile для сервера Django
+    container_name: backend
+    environment:
+      - POSTGRES_DB=project_db
+      - POSTGRES_USER=postgres_user
+      - POSTGRES_PASSWORD=postgres_password
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0  # Добавлено ALLOWED_HOSTS для Django
+    ports:
+      - "8000:8000"  # Проброс порта 8000 контейнера на 8000 хоста
+    depends_on:
+      - postgres  # Зависит от сервиса PostgreSQL
+      - redis     # Зависит от сервиса Redis
+    volumes:
+      - ./backend:/app  # Привязка директории с кодом к контейнеру
+    networks:
+      - app_network  # Сетевой мост для взаимодействия с другими контейнерами
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: project_db
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+
+networks:
+  app_network:
+    driver: bridge
