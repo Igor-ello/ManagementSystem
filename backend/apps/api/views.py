@@ -1,3 +1,5 @@
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
@@ -15,11 +17,9 @@ class ProjectViewSet(ModelViewSet):
         """Назначаем владельца проекта через ID создателя с проверкой прав"""
         user = self.request.user
 
-        # Проверка, что пользователь имеет право создавать проекты (только Admin или Manager)
         if user.role not in ['Admin', 'Manager']:
             raise PermissionDenied("You don't have permission to create a project.")
 
-        # Устанавливаем владельца как текущего пользователя
         serializer.save(owner=user)
 
     def perform_update(self, serializer):
@@ -31,6 +31,40 @@ class ProjectViewSet(ModelViewSet):
             raise PermissionDenied("You don't have permission to update this project.")
 
         serializer.save()
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+
+        # Проверка прав
+        user = request.user
+        if instance.owner != user and user.role != 'Admin':
+            raise PermissionDenied("You don't have permission to update this project.")
+
+        # Валидация данных
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        # Сохранение изменений
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        """DELETE с проверкой прав"""
+        instance = self.get_object()
+        user = request.user
+
+        # Проверяем права доступа
+        if instance.owner != user and user.role != 'Admin':
+            raise PermissionDenied("You don't have permission to delete this project.")
+
+        self.perform_destroy(instance)
+        return Response({"detail": "Project deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+
+    def perform_destroy(self, instance):
+        """Физическое удаление проекта"""
+        instance.delete()
 
 
 class CustomUserViewSet(ModelViewSet):

@@ -30,15 +30,15 @@ class ProjectSerializer(serializers.ModelSerializer):
         return project
 
     def update(self, instance, validated_data):
-        user = self.context['request'].user  # Получаем текущего аутентифицированного пользователя
+        # Обработка Many-to-Many поля "participants"
+        participants = validated_data.pop('participants', None)
+        if participants is not None:
+            instance.participants.set(participants)  # Обновляем связи
 
-        # Проверяем, что только Admin или сам владелец может обновить проект
-        if instance.owner != user and user.role != 'Admin':
-            raise PermissionDenied("You don't have permission to update this project.")
-
-        # Обновляем проект
+        # Обновление остальных полей
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
+
         instance.save()
         return instance
 
@@ -95,9 +95,9 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    assignee = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), allow_null=True)  # ID исполнителя
+    assignee = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), many=True, allow_null=True)  # Множественная привязка
     project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())  # Привязка к проекту
-    creator = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())  # ID создателя задачи
+    creator = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())  # Привязка к создателю задачи
 
     class Meta:
         model = Task
@@ -111,17 +111,29 @@ class TaskSerializer(serializers.ModelSerializer):
             raise PermissionDenied("You don't have permission to create a task.")
 
         validated_data['creator'] = user  # Устанавливаем текущего пользователя как создателя задачи
-        return Task.objects.create(**validated_data)
+        task = Task.objects.create(**validated_data)
+
+        # Обрабатываем множество исполнителей
+        assignees = validated_data.get('assignee', [])
+        task.assignee.set(assignees)  # Обновляем many-to-many связь с исполнителями
+        return task
 
     def update(self, instance, validated_data):
         user = self.context['request'].user  # Получаем текущего аутентифицированного пользователя
 
-        # Проверка, что только Admin, Manager или сам создатель задачи может обновить задачу
+        # Проверка прав на обновление
         if instance.creator != user and user.role not in ['Admin', 'Manager']:
             raise PermissionDenied("You don't have permission to update this task.")
 
-        # Обновляем задачу
+        # Обновляем остальные поля задачи
+        assignees = validated_data.pop('assignee', None)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
+
         instance.save()
+
+        # Обновляем many-to-many связь с исполнителями
+        if assignees is not None:
+            instance.assignee.set(assignees)
+
         return instance
