@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 # Основная директория проекта
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'django_celery_beat', # Для Celery
 ]
 
@@ -63,6 +65,15 @@ TEMPLATES = [
         },
     },
 ]
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),  # Устанавливаем срок действия токена доступа
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Устанавливаем срок действия токена обновления
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,  # Отключаем старые токены после обновления
+    'ALGORITHM': 'HS256',  # Алгоритм шифрования
+    'SIGNING_KEY': SECRET_KEY,  # Используем ключ из настроек Django
+}
 
 # Основной URL и WSGI-конфигурация
 ROOT_URLCONF = 'management_system.urls'
@@ -97,8 +108,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # DRF конфигурация
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [],
-    'DEFAULT_PERMISSION_CLASSES': [],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 # Celery конфигурация

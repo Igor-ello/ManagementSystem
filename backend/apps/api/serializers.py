@@ -11,32 +11,47 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = ['id', 'name', 'description', 'owner', 'participants', 'created_at', 'status']
 
+    def create(self, validated_data):
+        user = self.context['request'].user  # Получаем текущего аутентифицированного пользователя
+
+        # Проверяем, что пользователь имеет право создавать проекты (только Admin или Manager)
+        if user.role not in ['Admin', 'Manager']:
+            raise PermissionDenied("You don't have permission to create a project.")
+
+        # Сохраняем проект
+        return Project.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user  # Получаем текущего аутентифицированного пользователя
+
+        # Проверяем, что только Admin или сам владелец может обновить проект
+        if instance.owner != user and user.role != 'Admin':
+            raise PermissionDenied("You don't have permission to update this project.")
+
+        # Обновляем проект
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
-    admin_id = serializers.IntegerField(write_only=True)  # поле для ID администратора
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'password', 'first_name', 'last_name', 'role', 'admin_id']
+        fields = ['id', 'username', 'email', 'password', 'first_name', 'last_name', 'role']
         extra_kwargs = {
             'password': {'write_only': True}
         }
 
     def create(self, validated_data):
-        # Извлекаем ID администратора из данных запроса
-        admin_id = validated_data.pop('admin_id')
+        user = self.context['request'].user  # Получаем текущего аутентифицированного пользователя
 
-        # Находим пользователя, который инициирует создание
-        try:
-            admin_user = CustomUser.objects.get(id=admin_id)
-        except CustomUser.DoesNotExist:
-            raise PermissionDenied("Admin user does not exist.")  # Если такого пользователя нет
+        # Проверяем, что только Admin может создавать пользователей
+        if user.role != 'Admin':
+            raise PermissionDenied("You don't have permission to create a user.")
 
-        # Проверяем, является ли он администратором
-        if admin_user.role != 'Admin':
-            raise PermissionDenied("You don't have permission to create a user.")  # Если не админ
-
-        # Создаем нового пользователя
+        # Создаём нового пользователя
         user = CustomUser.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
@@ -48,6 +63,12 @@ class CustomUserSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
+        user = self.context['request'].user  # Получаем текущего аутентифицированного пользователя
+
+        # Проверяем, что только Admin или сам пользователь может обновить свои данные
+        if user != instance and user.role != 'Admin':
+            raise PermissionDenied("You don't have permission to update this user.")
+
         # Обновляем поля, если они есть в запросе
         instance.username = validated_data.get('username', instance.username)
         instance.email = validated_data.get('email', instance.email)
@@ -64,6 +85,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
 class TaskSerializer(serializers.ModelSerializer):
     assignee = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), allow_null=True)  # ID исполнителя
     project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())  # Привязка к проекту
@@ -72,3 +94,26 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ['id', 'title', 'description', 'status', 'due_date', 'start_date', 'project', 'assignee', 'creator', 'created_at']
+
+    def create(self, validated_data):
+        user = self.context['request'].user  # Получаем текущего аутентифицированного пользователя
+
+        # Проверка, что только Admin или Manager может создавать задачи
+        if user.role not in ['Admin', 'Manager']:
+            raise PermissionDenied("You don't have permission to create a task.")
+
+        validated_data['creator'] = user  # Устанавливаем текущего пользователя как создателя задачи
+        return Task.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user  # Получаем текущего аутентифицированного пользователя
+
+        # Проверка, что только Admin, Manager или сам создатель задачи может обновить задачу
+        if instance.creator != user and user.role not in ['Admin', 'Manager']:
+            raise PermissionDenied("You don't have permission to update this task.")
+
+        # Обновляем задачу
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance

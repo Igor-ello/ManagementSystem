@@ -1,6 +1,29 @@
 
 ## Запросы
 
+### Получение токена
+
+* Метод: POST
+* URL: http://localhost:8000/api/token/
+Тело запроса: JSON
+```json
+{
+    "username": "your_username",
+    "password": "your_password"
+}
+```
+
+После отправки запроса, если ваши данные правильные, вы получите ответ с токенами:
+
+```json
+{
+    "access": "your_access_token",
+    "refresh": "your_refresh_token"
+}
+```
+
+---
+
 ### Получить список проектов
 * Метод: GET
 * URL: http://localhost:8000/api/projects/

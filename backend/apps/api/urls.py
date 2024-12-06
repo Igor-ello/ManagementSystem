@@ -1,7 +1,8 @@
 from django.urls import path, include
-from django.contrib import admin
 from rest_framework.routers import DefaultRouter
-from .views import ProjectViewSet, TaskViewSet, CustomUserViewSet, RegisterView
+from .views import ProjectViewSet, TaskViewSet, CustomUserViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 
 # Создание маршрутизатора для ViewSet
 router = DefaultRouter()
@@ -12,7 +13,8 @@ router.register(r'users', CustomUserViewSet, basename='user')
 # Список URL
 urlpatterns = [
     # Маршрут для регистрации пользователя
-    path('users/register/', RegisterView.as_view(), name='register'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Получение токена
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Обновление токена
 
     # Все маршруты, созданные через router
     path('', include(router.urls)),

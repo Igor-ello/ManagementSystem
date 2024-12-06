@@ -1,8 +1,6 @@
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from .models import Project, Task, CustomUser
 from .serializers import ProjectSerializer, TaskSerializer, CustomUserSerializer
@@ -12,6 +10,7 @@ class ProjectViewSet(ModelViewSet):
     """CRUD для проектов"""
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]  # Все запросы требуют авторизации
 
     def perform_create(self, serializer):
         """Назначаем владельца проекта через ID создателя с проверкой прав"""
@@ -42,6 +41,7 @@ class TaskViewSet(ModelViewSet):
     """CRUD для задач"""
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         """Создание задачи с проверкой прав"""
@@ -72,63 +72,26 @@ class CustomUserViewSet(ModelViewSet):
     """CRUD для пользователей"""
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated]  # Только авторизованные пользователи могут выполнять действия
 
     def perform_create(self, serializer):
         """Пользователь может создавать других пользователей только если он Admin"""
-        admin_id = self.request.data.get('admin_id')  # Получаем ID администратора из запроса
-        if not admin_id:
-            raise PermissionDenied("Admin ID is required.")  # Если ID администратора нет, возвращаем ошибку
-
-        try:
-            admin_user = CustomUser.objects.get(id=admin_id)
-        except CustomUser.DoesNotExist:
-            raise PermissionDenied("Admin user does not exist.")  # Если такого пользователя нет
-
-        # Проверяем роль администратора
-        if admin_user.role != 'Admin':
+        user = self.request.user  # Получаем текущего аутентифицированного пользователя
+        if user.role != 'Admin':
             raise PermissionDenied("You don't have permission to create a user.")
 
-        # Сохраняем пользователя
+        # Создаём нового пользователя
         serializer.save()
 
     def perform_update(self, serializer):
         """Обновление пользователя с проверкой прав"""
-        admin_id = self.request.data.get('admin_id')  # Получаем ID администратора из запроса
-        user_id = self.request.data.get('user_id')  # Получаем ID пользователя, чьи данные обновляются
+        user = self.request.user  # Получаем текущего аутентифицированного пользователя
+        current_user = self.get_object()  # Получаем пользователя, чьи данные обновляются
 
-        if not admin_id or not user_id:
-            raise PermissionDenied("Admin ID and User ID are required.")  # Если нет ID, возвращаем ошибку
-
-        try:
-            admin_user = CustomUser.objects.get(id=admin_id)
-        except CustomUser.DoesNotExist:
-            raise PermissionDenied("Admin user does not exist.")  # Если такого пользователя нет
-
-        try:
-            user_to_update = CustomUser.objects.get(id=user_id)
-        except CustomUser.DoesNotExist:
-            raise PermissionDenied("User to update does not exist.")  # Если такого пользователя нет
-
-        # Проверяем роль администратора
-        if admin_user.role != 'Admin':
+        # Проверяем, что только Admin или сам пользователь может обновить свои данные
+        if user != current_user and user.role != 'Admin':
             raise PermissionDenied("You don't have permission to update this user.")
 
-        # Проверяем, что администратор может обновлять только другие аккаунты (если необходимо)
-        if admin_user == user_to_update:
-            raise PermissionDenied("An admin cannot update their own user details this way.")
-
-        # Сохраняем обновленные данные
+        # Сохраняем изменения
         serializer.save()
 
-
-class RegisterView(APIView):
-    """Регистрация пользователя без авторизации"""
-    permission_classes = [AllowAny]  # Разрешить доступ без авторизации
-
-    def post(self, request, *args, **kwargs):
-        """Регистрация нового пользователя"""
-        serializer = CustomUserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
