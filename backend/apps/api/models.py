@@ -4,7 +4,7 @@ from django.conf import settings
 
 
 class Project(models.Model):
-    """Класс Пользователя"""
+    """Класс Проекта"""
     id = models.BigAutoField(primary_key=True)
     User = settings.AUTH_USER_MODEL
     name = models.CharField(max_length=255)
@@ -60,8 +60,8 @@ class Task(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='To Do')
-    due_date = models.DateTimeField(null=True, blank=True)  # Новый столбец для дедлайна
-    start_date = models.DateTimeField(null=True, blank=True)  # Дата начала
+    due_date = models.DateTimeField(null=True, blank=True)
+    start_date = models.DateTimeField(null=True, blank=True)
     project = models.ForeignKey('Project', related_name='tasks', on_delete=models.CASCADE)
     assignee = models.ForeignKey(CustomUser, related_name='tasks', on_delete=models.SET_NULL, null=True, blank=True)
     creator = models.ForeignKey(CustomUser, related_name='created_tasks', on_delete=models.CASCADE)  # Создатель задачи

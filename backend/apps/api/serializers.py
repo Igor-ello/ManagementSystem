@@ -18,8 +18,16 @@ class ProjectSerializer(serializers.ModelSerializer):
         if user.role not in ['Admin', 'Manager']:
             raise PermissionDenied("You don't have permission to create a project.")
 
-        # Сохраняем проект
-        return Project.objects.create(**validated_data)
+        # Убираем участников из данных перед созданием объекта
+        participants = validated_data.pop('participants', [])
+
+        # Создаем проект
+        project = Project.objects.create(**validated_data)
+
+        # Устанавливаем участников
+        project.participants.set(participants)
+
+        return project
 
     def update(self, instance, validated_data):
         user = self.context['request'].user  # Получаем текущего аутентифицированного пользователя
