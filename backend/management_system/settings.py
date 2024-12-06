@@ -66,13 +66,25 @@ TEMPLATES = [
     },
 ]
 
+# Настройки токена
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),  # Устанавливаем срок действия токена доступа
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Устанавливаем срок действия токена обновления
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,  # Отключаем старые токены после обновления
-    'ALGORITHM': 'HS256',  # Алгоритм шифрования
-    'SIGNING_KEY': SECRET_KEY,  # Используем ключ из настроек Django
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+}
+
+# Настройки кэширования через Redis
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis:6379/1',  # Указываем хост и базу данных Redis
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
 }
 
 # Основной URL и WSGI-конфигурация
@@ -128,11 +140,26 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'console': {
+            'level': 'INFO',  # Уровень логирования (можно изменить на DEBUG, ERROR и т.д.)
             'class': 'logging.StreamHandler',
         },
+        'file': {
+            'level': 'INFO',  # Уровень логирования
+            'class': 'logging.FileHandler',
+            'filename': 'project.log',  # Путь к файлу лога
+        },
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG' if DEBUG else 'WARNING',
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],  # Сюда добавлены два обработчика: консоль и файл
+            'level': 'INFO',  # Уровень логирования для django
+            'propagate': True,
+        },
+        'myapp': {  # Ваше приложение (или общий логер для проекта)
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
     },
 }
+

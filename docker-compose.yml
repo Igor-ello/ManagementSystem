@@ -10,7 +10,7 @@ services:
       - POSTGRES_PASSWORD=postgres_password
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
-      - REDIS_URL=redis://redis:6379/0
+      - REDIS_URL=redis://redis:6379/1  # Указан адрес Redis
       - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0  # Добавлено ALLOWED_HOSTS для Django
     ports:
       - "8000:8000"  # Проброс порта 8000 контейнера на 8000 хоста
@@ -44,6 +44,7 @@ services:
       - "6379:6379"
     networks:
       - app_network
+    command: ["redis-server", "--appendonly", "yes"]  # Включаем сохранение данных Redis в файл
 
 volumes:
   postgres_data:
