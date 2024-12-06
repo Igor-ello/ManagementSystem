@@ -9,8 +9,19 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'default-secret-key')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
+# Тип поля по умолчанию
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 # Настройки аутентификации
-AUTH_USER_MODEL = "api.CustomUser"
+AUTH_USER_MODEL = 'api.CustomUser'
+
+# Настройки админа
+ADMIN_USERNAME = 'admin'  # Имя пользователя
+ADMIN_PASSWORD = 'adminpassword'  # Пароль администратора
+ADMIN_EMAIL = 'admin@example.com'  # Почта администратора
+ADMIN_ROLE = 'Admin'
+ADMIN_FIRST_NAME = 'Igorello'
+ADMIN_LAST_NAME = 'Orlov'
 
 # Приложения
 INSTALLED_APPS = [
@@ -86,13 +97,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # DRF конфигурация
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'DEFAULT_PERMISSION_CLASSES': [],
 }
 
 # Celery конфигурация
