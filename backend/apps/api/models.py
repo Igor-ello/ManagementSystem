@@ -9,7 +9,7 @@ class Project(models.Model):
     User = settings.AUTH_USER_MODEL
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    owner = models.ForeignKey(User, related_name="owned_projects", on_delete=models.CASCADE, null=True, blank=True)  # Владелец проекта
+    owner = models.ForeignKey(User, related_name="owned_projects", on_delete=models.CASCADE, null=True, blank=True)
     participants = models.ManyToManyField(User, related_name="participating_projects", blank=True)  # Участники
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=50, choices=[('Active', 'Active'), ('Archived', 'Archived')], default='Active')  # Статус проекта
@@ -63,8 +63,8 @@ class Task(models.Model):
     due_date = models.DateTimeField(null=True, blank=True)
     start_date = models.DateTimeField(null=True, blank=True)
     project = models.ForeignKey('Project', related_name='tasks', on_delete=models.CASCADE)
-    assignee = models.ForeignKey(CustomUser, related_name='tasks', on_delete=models.SET_NULL, null=True, blank=True)
-    creator = models.ForeignKey(CustomUser, related_name='created_tasks', on_delete=models.CASCADE)  # Создатель задачи
+    assignees = models.ManyToManyField(CustomUser, related_name='tasks', blank=True)
+    creator = models.ForeignKey(CustomUser, related_name='created_tasks', on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

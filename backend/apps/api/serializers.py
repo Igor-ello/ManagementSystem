@@ -95,13 +95,12 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    assignee = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), many=True, allow_null=True)  # Множественная привязка
+    assignees = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), many=True, allow_null=True)  # Множественная привязка
     project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())  # Привязка к проекту
-    creator = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())  # Привязка к создателю задачи
 
     class Meta:
         model = Task
-        fields = ['id', 'title', 'description', 'status', 'due_date', 'start_date', 'project', 'assignee', 'creator', 'created_at']
+        fields = ['id', 'title', 'description', 'status', 'due_date', 'start_date', 'project', 'assignees', 'creator', 'created_at']
 
     def create(self, validated_data):
         user = self.context['request'].user  # Получаем текущего аутентифицированного пользователя
@@ -111,11 +110,17 @@ class TaskSerializer(serializers.ModelSerializer):
             raise PermissionDenied("You don't have permission to create a task.")
 
         validated_data['creator'] = user  # Устанавливаем текущего пользователя как создателя задачи
+
+        # Убираем поле 'assignees' из validated_data перед созданием задачи
+        assignees = validated_data.pop('assignees', [])
+
+        # Создаем задачу без поля 'assignees'
         task = Task.objects.create(**validated_data)
 
         # Обрабатываем множество исполнителей
-        assignees = validated_data.get('assignee', [])
-        task.assignee.set(assignees)  # Обновляем many-to-many связь с исполнителями
+        if assignees:
+            task.assignees.set(assignees)  # Обновляем many-to-many связь с исполнителями
+
         return task
 
     def update(self, instance, validated_data):
@@ -126,7 +131,7 @@ class TaskSerializer(serializers.ModelSerializer):
             raise PermissionDenied("You don't have permission to update this task.")
 
         # Обновляем остальные поля задачи
-        assignees = validated_data.pop('assignee', None)
+        assignees = validated_data.pop('assignees', None)  # Убираем из validated_data поле 'assignees' для обновления
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
@@ -134,6 +139,6 @@ class TaskSerializer(serializers.ModelSerializer):
 
         # Обновляем many-to-many связь с исполнителями
         if assignees is not None:
-            instance.assignee.set(assignees)
+            instance.assignees.set(assignees)  # Обновляем many-to-many связь с исполнителями
 
         return instance

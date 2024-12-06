@@ -1,247 +1,228 @@
 
-## Запросы
+# Project Management API
 
-### Получение токена
+API для управления проектами, задачами, пользователями и постами. Поддерживает аутентификацию через JWT токены и CRUD операции для всех сущностей.
 
-* Метод: POST
-* URL: http://localhost:8000/api/token/
-Тело запроса: JSON
-```json
-{
-    "username": "your_username",
-    "password": "your_password"
-}
-```
+## Требования
+- Python 3.8+
+- Django
+- Django REST Framework
+- djangorestframework-simplejwt
 
-После отправки запроса, если ваши данные правильные, вы получите ответ с токенами:
+## Установка и запуск
 
-```json
-{
-    "access": "your_access_token",
-    "refresh": "your_refresh_token"
-}
-```
+1. Клонируйте репозиторий:
+    ```bash
+    git clone https://github.com/your-repo.git
+    cd your-repo
+    ```
 
----
+2. Установите зависимости:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-### Получить список проектов
-* Метод: GET
-* URL: http://localhost:8000/api/projects/
-* Тело запроса: Не нужно (только заголовки).
-* Заголовки:
-  * Authorization: Bearer <your_token> (если используете токен аутентификации)
+3. Примените миграции:
+    ```bash
+    python manage.py migrate
+    ```
 
-### Создать новый проект
-* Метод: POST
-* URL: http://localhost:8000/api/projects/
-* Тело запроса: JSON
-```json
-{
-  "name": "New Project",
-  "description": "Project Description",
-  "start_date": "2024-12-05",
-  "end_date": "2025-12-05"
-}
-```
-* Заголовки:
-  * Authorization: Bearer <your_token>
-  * Content-Type: application/json
+4. Запустите сервер разработки:
+    ```bash
+    python manage.py runserver
+    ```
 
-### Просмотр информации о конкретном проекте по ID
-* Метод: GET
-* URL: http://localhost:8000/api/projects/1/ (замените 1 на нужный ID)
-* Заголовки:
-  * Authorization: Bearer <your_token>
+## Функционал API
 
----
+### Аутентификация
 
-### Получить задачи для проекта
-* Метод: GET
-* URL: http://localhost:8000/api/tasks/
-* Заголовки:
-* Authorization: Bearer <your_token>
-* Описание: Этот запрос возвращает все задачи.
-
-### Создать новую задачу
-* Метод: POST
-* URL: http://localhost:8000/api/tasks/
-* Тело запроса: JSON
-```json
-{
-  "title": "Task 1",
-  "description": "Task description",
-  "project": "http://localhost:8000/api/projects/1/",
-  "due_date": "2024-12-31"
-}
-```
-* Заголовки:
-  * Authorization: Bearer <your_token>
-  * Content-Type: application/json
-  * Описание: Создает задачу для проекта.
-
-### Обновить задачу
-* Метод: PUT
-* URL: http://localhost:8000/api/tasks/1/ (предполагая, что задача с ID 1 существует)
-* Тело запроса: JSON
-```json
-{
-  "title": "Updated Task Title",
-  "description": "Updated description",
-  "project": "http://localhost:8000/api/projects/1/",
-  "due_date": "2025-01-01"
-}
-```
-* Заголовки:
-  * Authorization: Bearer <your_token>
-  * Content-Type: application/json
-  * Описание: Обновляет существующую задачу.
-
-### Удалить задачу по ID
-* Метод: DELETE
-* URL: http://localhost:8000/api/tasks/1/ (предполагая, что задача с ID 1 существует)
-* Заголовки:
-* Authorization: Bearer <your_token>
-
----
-
-1. POST /api/users/register — Регистрация пользователя
-Описание: Создаёт нового пользователя.
-Тело запроса (Body):
-json
-Копировать код
-{
-  "username": "new_user",
-  "email": "newuser@example.com",
-  "password": "yourpassword"
-}
-Ответ: Статус 201 (Created) с данными о новом пользователе.
-2. POST /api/users/login — Вход пользователя
-Описание: Авторизует пользователя, возвращает JWT токен для авторизации.
-Тело запроса (Body):
-json
-Копировать код
-{
-  "username": "new_user",
-  "password": "yourpassword"
-}
-Ответ: Статус 200 (OK) с JWT токеном:
-json
-Копировать код
-{
-  "token": "your_jwt_token_here"
-}
-3. GET /api/users/profile — Просмотр профиля
-Описание: Получить данные текущего пользователя (нужна авторизация с помощью JWT токена).
-Заголовок (Header):
-makefile
-Копировать код
-Authorization: Bearer your_jwt_token_here
-Ответ: Статус 200 (OK) с данными пользователя:
-json
-Копировать код
-{
-  "id": 1,
-  "username": "new_user",
-  "email": "newuser@example.com",
-  "first_name": "First",
-  "last_name": "Last"
-}
-4. PUT /api/users/profile — Обновление профиля пользователя
-Описание: Обновить данные пользователя (например, имя или email).
-Заголовок (Header):
-makefile
-Копировать код
-Authorization: Bearer your_jwt_token_here
-Тело запроса (Body):
-json
-Копировать код
-{
-  "first_name": "UpdatedFirst",
-  "last_name": "UpdatedLast"
-}
-Ответ: Статус 200 (OK) с обновлёнными данными:
-json
-Копировать код
-{
-  "id": 1,
-  "username": "new_user",
-  "email": "newuser@example.com",
-  "first_name": "UpdatedFirst",
-  "last_name": "UpdatedLast"
-}
-5. GET /api/posts — Получение всех постов
-Описание: Получить список всех постов.
-Ответ: Статус 200 (OK) с данными постов:
-json
-Копировать код
-[
+#### Получение токенов
+- **Метод:** `POST`
+- **URL:** `/api/token/`
+- **Тело запроса:** 
+  ```json
   {
-    "id": 1,
-    "title": "Post title",
-    "content": "Post content"
-  },
-  {
-    "id": 2,
-    "title": "Another post title",
-    "content": "Another post content"
+      "username": "your_username",
+      "password": "your_password"
   }
-]
-6. POST /api/posts — Создание нового поста
-Описание: Создаёт новый пост.
-Заголовок (Header):
-makefile
-Копировать код
-Authorization: Bearer your_jwt_token_here
-Тело запроса (Body):
-json
-Копировать код
-{
-  "title": "New Post",
-  "content": "This is the content of the new post."
-}
-Ответ: Статус 201 (Created) с данными поста:
-json
-Копировать код
-{
-  "id": 3,
-  "title": "New Post",
-  "content": "This is the content of the new post."
-}
-7. GET /api/posts/{id} — Просмотр поста по ID
-Описание: Получить конкретный пост по его ID.
-Ответ: Статус 200 (OK) с данными поста:
-json
-Копировать код
-{
-  "id": 1,
-  "title": "Post title",
-  "content": "Post content"
-}
-8. PUT /api/posts/{id} — Обновление поста по ID
-Описание: Обновить пост по его ID.
-Заголовок (Header):
-makefile
-Копировать код
-Authorization: Bearer your_jwt_token_here
-Тело запроса (Body):
-json
-Копировать код
-{
-  "title": "Updated Post Title",
-  "content": "Updated content of the post."
-}
-Ответ: Статус 200 (OK) с обновлёнными данными поста:
-json
-Копировать код
-{
-  "id": 1,
-  "title": "Updated Post Title",
-  "content": "Updated content of the post."
-}
-9. DELETE /api/posts/{id} — Удаление поста по ID
-Описание: Удаляет пост по его ID.
-Заголовок (Header):
-makefile
-Копировать код
-Authorization: Bearer your_jwt_token_here
-Ответ: Статус 204 (No Content), если пост был удалён успешно.
+  ```
+- **Пример ответа:**
+  ```json
+  {
+      "access": "your_access_token",
+      "refresh": "your_refresh_token"
+  }
+  ```
+
+---
+
+### Пользователи
+
+#### Регистрация пользователя
+- **Метод:** `POST`
+- **URL:** `/api/users/register`
+- **Тело запроса:**
+  ```json
+  {
+      "username": "new_user",
+      "email": "newuser@example.com",
+      "password": "yourpassword"
+  }
+  ```
+- **Пример ответа:**
+  ```json
+  {
+      "id": 1,
+      "username": "new_user",
+      "email": "newuser@example.com"
+  }
+  ```
+
+#### Вход в систему
+- **Метод:** `POST`
+- **URL:** `/api/users/login`
+- **Тело запроса:**
+  ```json
+  {
+      "username": "new_user",
+      "password": "yourpassword"
+  }
+  ```
+- **Пример ответа:**
+  ```json
+  {
+      "token": "your_jwt_token_here"
+  }
+  ```
+
+#### Профиль пользователя
+- **Методы:**
+  - `GET` `/api/users/profile` — получить данные текущего пользователя.
+  - `PUT` `/api/users/profile` — обновить профиль.
+- **Пример тела запроса (для обновления):**
+  ```json
+  {
+      "first_name": "UpdatedFirst",
+      "last_name": "UpdatedLast"
+  }
+  ```
+- **Пример ответа:**
+  ```json
+  {
+      "id": 1,
+      "username": "new_user",
+      "email": "newuser@example.com",
+      "first_name": "UpdatedFirst",
+      "last_name": "UpdatedLast"
+  }
+  ```
+
+---
+
+### Проекты
+
+#### Получение списка проектов
+- **Метод:** `GET`
+- **URL:** `/api/projects/`
+
+#### Создание проекта
+- **Метод:** `POST`
+- **URL:** `/api/projects/`
+- **Тело запроса:**
+  ```json
+  {
+      "name": "New Project",
+      "description": "Project Description",
+      "start_date": "2024-12-05",
+      "end_date": "2025-12-05"
+  }
+  ```
+- **Пример ответа:**
+  ```json
+  {
+      "id": 1,
+      "name": "New Project",
+      "description": "Project Description",
+      "start_date": "2024-12-05",
+      "end_date": "2025-12-05",
+      "status": "Active"
+  }
+  ```
+
+#### Обновление и удаление проекта
+- **Методы:**
+  - `PUT` `/api/projects/{id}/` — обновить проект.
+  - `DELETE` `/api/projects/{id}/` — удалить проект.
+
+---
+
+### Задачи
+
+#### Получение списка задач
+- **Метод:** `GET`
+- **URL:** `/api/tasks/`
+
+#### Создание задачи
+- **Метод:** `POST`
+- **URL:** `/api/tasks/`
+- **Тело запроса:**
+  ```json
+  {
+      "title": "Task 1",
+      "description": "Task description",
+      "project": "http://localhost:8000/api/projects/1/",
+      "due_date": "2024-12-31"
+  }
+  ```
+- **Пример ответа:**
+  ```json
+  {
+      "id": 1,
+      "title": "Task 1",
+      "description": "Task description",
+      "project": "http://localhost:8000/api/projects/1/",
+      "due_date": "2024-12-31"
+  }
+  ```
+
+#### Обновление и удаление задачи
+- **Методы:**
+  - `PUT` `/api/tasks/{id}/` — обновить задачу.
+  - `DELETE` `/api/tasks/{id}/` — удалить задачу.
+
+---
+
+### Посты
+
+#### Получение списка постов
+- **Метод:** `GET`
+- **URL:** `/api/posts/`
+
+#### Создание поста
+- **Метод:** `POST`
+- **URL:** `/api/posts/`
+- **Тело запроса:**
+  ```json
+  {
+      "title": "New Post",
+      "content": "This is the content of the new post."
+  }
+  ```
+
+#### Обновление и удаление поста
+- **Методы:**
+  - `PUT` `/api/posts/{id}/` — обновить пост.
+  - `DELETE` `/api/posts/{id}/` — удалить пост.
+
+---
+
+## Пример авторизации
+Добавьте в заголовок запроса:
+```
+Authorization: Bearer your_access_token
+```
+
+---
+
+## Контактная информация
+Если у вас есть вопросы или предложения, свяжитесь с нами через email: [support@example.com](mailto:support@example.com)
