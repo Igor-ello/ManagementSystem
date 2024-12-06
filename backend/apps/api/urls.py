@@ -12,10 +12,7 @@ router.register(r'users', CustomUserViewSet, basename='user')
 
 # Список URL
 urlpatterns = [
-    # Маршрут для регистрации пользователя
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Получение токена
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Обновление токена
-
-    # Все маршруты, созданные через router
-    path('', include(router.urls)),
+    path('', include(router.urls)), # Включение маршрутов из router
 ]

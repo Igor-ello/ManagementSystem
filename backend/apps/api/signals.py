@@ -6,8 +6,8 @@ from .models import CustomUser
 
 @receiver(post_migrate)
 def create_admin_user(sender, **kwargs):
+    """Создает суперпользователя при миграции, если он отсутствует"""
     if not CustomUser.objects.filter(username=settings.ADMIN_USERNAME).exists():
-        # Если администратор не существует, создаем его
         CustomUser.objects.create_superuser(
             username=settings.ADMIN_USERNAME,
             password=settings.ADMIN_PASSWORD,

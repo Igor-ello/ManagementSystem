@@ -4,22 +4,22 @@ from django.conf import settings
 
 
 class Project(models.Model):
-    """Класс Проекта"""
+    """Модель проекта"""
     id = models.BigAutoField(primary_key=True)
     User = settings.AUTH_USER_MODEL
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     owner = models.ForeignKey(User, related_name="owned_projects", on_delete=models.CASCADE, null=True, blank=True)
-    participants = models.ManyToManyField(User, related_name="participating_projects", blank=True)  # Участники
+    participants = models.ManyToManyField(User, related_name="participating_projects", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=50, choices=[('Active', 'Active'), ('Archived', 'Archived')], default='Active')  # Статус проекта
+    status = models.CharField(max_length=50, choices=[('Active', 'Active'), ('Archived', 'Archived')], default='Active')
 
     def __str__(self):
         return self.name
 
 
 class CustomUser(AbstractUser):
-    """Пользователь с ролью (Admin, Manager, Employee) для контроля доступа."""
+    """Модель пользователя"""
     ROLE_CHOICES = [
         ('Admin', 'Admin'),
         ('Manager', 'Manager'),
@@ -30,16 +30,16 @@ class CustomUser(AbstractUser):
     role = models.CharField(
         max_length=50,
         choices=ROLE_CHOICES,
-        default='Employee',  # Роль по умолчанию - Employee
+        default='Employee',
     )
     groups = models.ManyToManyField(
         Group,
-        related_name="customuser_groups",  # Уникальное имя обратной связи
+        related_name="customuser_groups",
         blank=True,
     )
     user_permissions = models.ManyToManyField(
         Permission,
-        related_name="customuser_permissions",  # Уникальное имя обратной связи
+        related_name="customuser_permissions",
         blank=True,
     )
 
@@ -48,7 +48,7 @@ class CustomUser(AbstractUser):
 
 
 class Task(models.Model):
-    """Класс Задачи"""
+    """Модель задачи"""
     STATUS_CHOICES = [
         ('To Do', 'To Do'),
         ('In Progress', 'In Progress'),
