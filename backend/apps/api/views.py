@@ -1,10 +1,14 @@
 from django.core.cache import cache
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 import logging
+
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from .models import Project, Task, CustomUser
 from .serializers import ProjectSerializer, TaskSerializer, CustomUserSerializer
 
@@ -225,3 +229,21 @@ class TaskViewSet(ModelViewSet):
         # Сброс кэша для задач
         cache.delete(self.get_cache_key(user))
         logger.info(f"Cache cleared for tasks of user {user.id} after task deletion.")
+
+
+class UserProfileView(APIView):
+    """Представление для получения данных пользователя после авторизации"""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        """Возвращаем данные текущего пользователя"""
+        user = request.user
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "role": user.role
+        })

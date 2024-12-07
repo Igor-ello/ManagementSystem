@@ -84,3 +84,14 @@ export const apiCreateUser = async (userData) => {
     return response.data;
 };
 
+const API_URL = 'http://localhost:8000/api/';
+
+// Получить профиль пользователя
+export const apiGetProfile = async (token) => {
+  const response = await axios.get(`${API_URL}profile/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response;
+};

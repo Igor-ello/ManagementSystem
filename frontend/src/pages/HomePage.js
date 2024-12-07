@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { apiGetProjects, apiGetTasks, apiGetUsers } from '../api/api'; // Импортируем функции для получения проектов, задач и пользователей
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -9,6 +9,13 @@ const HomePage = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    // Функция выхода
+    const handleLogout = () => {
+        localStorage.removeItem('access_token'); // Удаление токена
+        navigate('/login'); // Перенаправление на страницу логина
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,6 +42,12 @@ const HomePage = () => {
     return (
         <div className="container mt-5">
             <h1 className="text-center mb-4">Добро пожаловать на главную страницу</h1>
+
+            {/* Кнопки для профиля и выхода */}
+            <div className="d-flex justify-content-between mb-4">
+                <Link to="/profile" className="btn btn-secondary">Профиль</Link>
+                <button className="btn btn-danger" onClick={handleLogout}>Выйти</button>
+            </div>
 
             {/* Кнопки для перехода на страницы добавления */}
             <div className="text-center mb-4">
@@ -71,11 +84,18 @@ const HomePage = () => {
                                         alt={project.name}
                                     />
                                     <div className="card-body">
-                                        <h5 className="card-title">{project.name}</h5>
-                                        <p className="card-text text-truncate">{project.description || 'Описание отсутствует'}</p>
-                                        <Link to={`/projects/${project.id}`} className="btn btn-primary w-100">
+                                        <div className="d-flex justify-content-between">
+                                            <div>
+                                                <h5 className="card-title">{project.name}</h5>
+                                                <p className="card-text text-truncate">{project.description || 'Описание отсутствует'}</p>
+                                            </div>
+                                            <div className="text-muted">
+                                                ID: {project.id} {/* Отображение ID на одном уровне */}
+                                            </div>
+                                        </div>
+                                        <Link to={`/projects/${project.id}`} className="btn btn-primary w-100 mt-2">
                                             Подробнее
-                                        </Link>
+                                        </Link> {/* Отступ сверху от кнопки */}
                                     </div>
                                 </div>
                             </div>
@@ -100,11 +120,18 @@ const HomePage = () => {
                             <div key={task.id} className="col-md-4 mb-4">
                                 <div className="card h-100 shadow-sm">
                                     <div className="card-body">
-                                        <h5 className="card-title">{task.title}</h5>
-                                        <p className="card-text text-truncate">{task.description || 'Описание отсутствует'}</p>
-                                        <Link to={`/tasks/${task.id}`} className="btn btn-primary w-100">
+                                        <div className="d-flex justify-content-between">
+                                            <div>
+                                                <h5 className="card-title">{task.title}</h5>
+                                                <p className="card-text text-truncate">{task.description || 'Описание отсутствует'}</p>
+                                            </div>
+                                            <div className="text-muted">
+                                                ID: {task.id} {/* Отображение ID на одном уровне */}
+                                            </div>
+                                        </div>
+                                        <Link to={`/tasks/${task.id}`} className="btn btn-primary w-100 mt-2">
                                             Подробнее
-                                        </Link>
+                                        </Link> {/* Отступ сверху от кнопки */}
                                     </div>
                                 </div>
                             </div>
@@ -129,11 +156,18 @@ const HomePage = () => {
                             <div key={user.id} className="col-md-4 mb-4">
                                 <div className="card h-100 shadow-sm">
                                     <div className="card-body">
-                                        <h5 className="card-title">{user.username}</h5>
-                                        <p className="card-text text-truncate">{user.email}</p>
-                                        <Link to={`/users/${user.id}`} className="btn btn-primary w-100">
+                                        <div className="d-flex justify-content-between">
+                                            <div>
+                                                <h5 className="card-title">{user.username}</h5>
+                                                <p className="card-text text-truncate">{user.email}</p>
+                                            </div>
+                                            <div className="text-muted">
+                                                ID: {user.id} {/* Отображение ID на одном уровне */}
+                                            </div>
+                                        </div>
+                                        <Link to={`/users/${user.id}`} className="btn btn-primary w-100 mt-2">
                                             Подробнее
-                                        </Link>
+                                        </Link> {/* Отступ сверху от кнопки */}
                                     </div>
                                 </div>
                             </div>
