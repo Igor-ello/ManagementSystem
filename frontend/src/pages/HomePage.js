@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { apiGetProjects, apiGetTasks, apiGetUsers } from '../api/api'; // Импортируем функции для получения проектов, задач и пользователей
+import { apiGetProjects, apiGetTasks, apiGetUsers, apiGetProfile } from '../api/api'; // Импортируем функции для получения проектов, задач, пользователей и профиля
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const HomePage = () => {
     const [projects, setProjects] = useState([]);
     const [tasks, setTasks] = useState([]);
     const [users, setUsers] = useState([]);
+    const [user, setUser] = useState(null); // Состояние для данных пользователя
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -21,14 +22,16 @@ const HomePage = () => {
         const fetchData = async () => {
             try {
                 // Параллельно запрашиваем проекты, задачи и пользователей
-                const [projectsResponse, tasksResponse, usersResponse] = await Promise.all([
+                const [projectsResponse, tasksResponse, usersResponse, profileResponse] = await Promise.all([
                     apiGetProjects(),
                     apiGetTasks(),
                     apiGetUsers(),
+                    apiGetProfile(localStorage.getItem('access_token')), // Получаем данные текущего пользователя
                 ]);
                 setProjects(projectsResponse.data);
                 setTasks(tasksResponse.data);
                 setUsers(usersResponse.data); // Сохраняем пользователей
+                setUser(profileResponse.data); // Сохраняем данные пользователя
             } catch (err) {
                 setError('Ошибка при загрузке данных. Пожалуйста, попробуйте позже.');
             } finally {
@@ -41,7 +44,7 @@ const HomePage = () => {
 
     return (
         <div className="container mt-5">
-            <h1 className="text-center mb-4">Добро пожаловать на главную страницу</h1>
+            <h1 className="text-center mb-4">Добро пожаловать, {user ? user.first_name : 'пользователь'}!</h1>
 
             {/* Кнопки для профиля и выхода */}
             <div className="d-flex justify-content-between mb-4">
@@ -182,6 +185,11 @@ const HomePage = () => {
                     Список пользователей пуст. Добавьте нового пользователя, чтобы начать работу.
                 </div>
             )}
+
+            {/* Отображение роли внизу страницы */}
+            <footer className="mt-5 text-center">
+                {user && <p>Ваша роль: {user.role}</p>}
+            </footer>
         </div>
     );
 };
