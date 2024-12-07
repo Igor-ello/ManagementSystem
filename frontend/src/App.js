@@ -1,27 +1,18 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {BrowserRouter as Router, Navigate, Route, Routes} from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
-import ProjectPage from './pages/ProjectPage';
-import TaskPage from './pages/TaskPage';
-import { Link } from 'react-router-dom';
+import AddProjectPage from './pages/AddProjectPage'; // Импортируем страницу добавления проекта
+import { isAuthenticated } from './utils/auth'; // Импортируем функцию проверки авторизации
 
 const App = () => {
     return (
         <Router>
-            <nav>
-                <ul>
-                    <li><Link to="/home">Home</Link></li>
-                    <li><Link to="/login">Login</Link></li>
-                    <li><Link to="/projects/1">Project 1</Link></li>
-                    <li><Link to="/tasks/1">Task 1</Link></li>
-                </ul>
-            </nav>
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/projects/:id" element={<ProjectPage />} />
-                <Route path="/tasks/:id" element={<TaskPage />} />
+                <Route path="/home" element={isAuthenticated() ? <HomePage /> : <Navigate to="/login" />} />
+                <Route path="/add-project" element={isAuthenticated() ? <AddProjectPage /> : <Navigate to="/login" />} />
+                {/* Добавили маршрут для добавления проекта */}
             </Routes>
         </Router>
     );

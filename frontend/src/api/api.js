@@ -19,25 +19,37 @@ export const apiLogin = async ({ username, password }) => {
     }
 };
 
+export const apiCreateProject = async (projectData) => {
+    try {
+        const response = await axios.post('http://localhost:8000/api/projects/', projectData, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            }
+        });
+        return response.data; // Возвращаем данные с сервера
+    } catch (error) {
+        throw error; // Обрабатываем ошибку
+    }
+};
+
+const API_BASE_URL = 'http://localhost:8000/api'; // Базовый URL для API
+
+// Функция для получения списка проектов
 export const apiGetProjects = async () => {
-    const response = await axios.get('/api/projects/');
+    const response = await axios.get(`${API_BASE_URL}/projects/`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+    });
     return response;
 };
 
-// Получение данных о проекте по ID
-export const apiGetProjectDetails = async (projectId) => {
-    const response = await axios.get(`/api/projects/${projectId}/`);
-    return response;
-};
-
-// Получение данных о задаче по ID
-export const apiGetTaskDetails = async (taskId) => {
-    const response = await axios.get(`/api/tasks/${taskId}/`);
-    return response;
-};
-
-// Обновление статуса задачи
-export const apiUpdateTaskStatus = async (taskId, status) => {
-    const response = await axios.patch(`/api/tasks/${taskId}/`, { status });
+// Функция для получения списка задач
+export const apiGetTasks = async () => {
+    const response = await axios.get(`${API_BASE_URL}/tasks/`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+    });
     return response;
 };
