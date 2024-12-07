@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { apiGetProjects, apiGetTasks } from '../api/api'; // Импортируем функции для получения проектов и задач
+import { apiGetProjects, apiGetTasks, apiGetUsers } from '../api/api'; // Импортируем функции для получения проектов, задач и пользователей
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const HomePage = () => {
     const [projects, setProjects] = useState([]);
     const [tasks, setTasks] = useState([]);
+    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Параллельно запрашиваем проекты и задачи
-                const [projectsResponse, tasksResponse] = await Promise.all([
+                // Параллельно запрашиваем проекты, задачи и пользователей
+                const [projectsResponse, tasksResponse, usersResponse] = await Promise.all([
                     apiGetProjects(),
                     apiGetTasks(),
+                    apiGetUsers(),
                 ]);
                 setProjects(projectsResponse.data);
                 setTasks(tasksResponse.data);
+                setUsers(usersResponse.data); // Сохраняем пользователей
             } catch (err) {
                 setError('Ошибка при загрузке данных. Пожалуйста, попробуйте позже.');
             } finally {
@@ -33,11 +36,11 @@ const HomePage = () => {
         <div className="container mt-5">
             <h1 className="text-center mb-4">Добро пожаловать на главную страницу</h1>
 
-            {/* Кнопка для открытия модального окна */}
+            {/* Кнопки для перехода на страницы добавления */}
             <div className="text-center mb-4">
-                <button className="btn btn-success" onClick={() => setShowModal(true)}>
-                    Добавить новый проект
-                </button>
+                <Link to="/add-project" className="btn btn-primary me-2">Добавить проект</Link>
+                <Link to="/add-task" className="btn btn-primary me-2">Добавить задачу</Link>
+                <Link to="/add-user" className="btn btn-primary">Добавить пользователя</Link>
             </div>
 
             {loading && (
@@ -97,7 +100,7 @@ const HomePage = () => {
                             <div key={task.id} className="col-md-4 mb-4">
                                 <div className="card h-100 shadow-sm">
                                     <div className="card-body">
-                                        <h5 className="card-title">{task.name}</h5>
+                                        <h5 className="card-title">{task.title}</h5>
                                         <p className="card-text text-truncate">{task.description || 'Описание отсутствует'}</p>
                                         <Link to={`/tasks/${task.id}`} className="btn btn-primary w-100">
                                             Подробнее
@@ -114,6 +117,35 @@ const HomePage = () => {
             {!loading && !error && tasks.length === 0 && (
                 <div className="alert alert-info text-center">
                     Список задач пуст. Создайте новую задачу, чтобы начать работу.
+                </div>
+            )}
+
+            {/* Список пользователей */}
+            {!loading && !error && users.length > 0 && (
+                <div>
+                    <h3 className="mb-4">Список пользователей</h3>
+                    <div className="row">
+                        {users.map((user) => (
+                            <div key={user.id} className="col-md-4 mb-4">
+                                <div className="card h-100 shadow-sm">
+                                    <div className="card-body">
+                                        <h5 className="card-title">{user.username}</h5>
+                                        <p className="card-text text-truncate">{user.email}</p>
+                                        <Link to={`/users/${user.id}`} className="btn btn-primary w-100">
+                                            Подробнее
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Если пользователи не найдены */}
+            {!loading && !error && users.length === 0 && (
+                <div className="alert alert-info text-center">
+                    Список пользователей пуст. Добавьте нового пользователя, чтобы начать работу.
                 </div>
             )}
         </div>

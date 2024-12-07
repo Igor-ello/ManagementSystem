@@ -53,3 +53,34 @@ export const apiGetTasks = async () => {
     });
     return response;
 };
+
+// Функция для получения пользователей
+export const apiGetUsers = async () => {
+    const response = await axios.get(`${API_BASE_URL}/users/`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+    });
+    return response;
+};
+
+// Функция для создания задачи
+export const apiCreateTask = async (taskData) => {
+    const response = await axios.post(`${API_BASE_URL}/tasks/`, taskData, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+    });
+    return response.data;
+};
+
+// Функция для создания пользователя
+export const apiCreateUser = async (userData) => {
+    const response = await axios.post(`${API_BASE_URL}/users/`, userData, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+    });
+    return response.data;
+};
+
