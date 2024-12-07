@@ -23,6 +23,21 @@ services:
       - app_network  # Сетевой мост для взаимодействия с другими контейнерами
     command: sh -c "python manage.py makemigrations --noinput && python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
 
+  frontend:
+    build: ./frontend  # Путь к Dockerfile для фронтенда
+    container_name: frontend
+    environment:
+      - REACT_APP_API_URL=http://backend:8000  # Адрес API сервера (обращаемся к контейнеру backend)
+    ports:
+      - "3000:3000"  # Проброс порта 3000 контейнера на 3000 хоста
+    depends_on:
+      - backend  # Зависит от сервиса backend
+    volumes:
+      - ./frontend:/app  # Привязка директории с кодом к контейнеру
+    networks:
+      - app_network  # Сетевой мост для взаимодействия с другими контейнерами
+    command: sh -c "npm install && npm start"  # Установка зависимостей и запуск фронтенда
+
   postgres:
     image: postgres:15
     container_name: postgres
