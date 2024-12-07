@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
-    'django_celery_beat', # Для Celery
+    'corsheaders',
+    'django_celery_beat',
 ]
 
 # Middleware
@@ -47,7 +48,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+# Разрешить все источники (для разработки)
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Templates
 TEMPLATES = [

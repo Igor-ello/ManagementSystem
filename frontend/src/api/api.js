@@ -1,8 +1,22 @@
 import axios from 'axios';
 
-export const apiLogin = async (credentials) => {
-    const response = await axios.post('/api/auth/login/', credentials);
-    return response;
+const axiosInstance = axios.create({
+    baseURL: 'http://localhost:8000/api', // базовый URL для вашего API
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
+
+export const apiLogin = async ({ username, password }) => {
+    try {
+        const response = await axiosInstance.post('/token/', { username, password });
+        return { success: true, data: response.data };
+    } catch (error) {
+        return {
+            success: false,
+            message: error.response?.data?.detail || 'Ошибка авторизации. Проверьте логин и пароль.'
+        };
+    }
 };
 
 export const apiGetProjects = async () => {

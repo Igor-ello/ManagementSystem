@@ -7,6 +7,7 @@ const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -14,17 +15,21 @@ const LoginPage = () => {
         e.preventDefault();
         setLoading(true);
         setError('');
+        setSuccess('');
 
         try {
-            const response = await apiLogin({ username, password });
-            if (response.status === 200) {
-                // Сохранение токена или другого значения при необходимости
-                navigate('/home'); // Перенаправление на главную страницу
+            const result = await apiLogin({ username, password });
+            if (result.success) {
+                localStorage.setItem('access_token', result.data.access);
+                localStorage.setItem('refresh_token', result.data.refresh);
+                setSuccess('Авторизация успешна!');
+                navigate('/home');
             } else {
-                setError('Ошибка авторизации. Проверьте логин и пароль.');
+                setError(result.message || 'Ошибка авторизации. Проверьте логин и пароль.');
             }
         } catch (err) {
-            setError(err.response?.data?.message || 'Произошла ошибка. Попробуйте снова.');
+            // Выводим подробное сообщение об ошибке
+            setError(`Произошла ошибка: ${err.message || 'Неизвестная ошибка'}`);
         } finally {
             setLoading(false);
         }
@@ -35,7 +40,11 @@ const LoginPage = () => {
             <div className="row justify-content-center">
                 <div className="col-md-6">
                     <h2 className="text-center mt-5">Авторизация</h2>
+
+                    {/* Уведомления об ошибке или успехе */}
                     {error && <div className="alert alert-danger">{error}</div>}
+                    {success && <div className="alert alert-success">{success}</div>}
+
                     <form onSubmit={handleLogin}>
                         <div className="mb-3">
                             <label htmlFor="username" className="form-label">Имя пользователя</label>
