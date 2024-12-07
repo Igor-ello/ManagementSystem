@@ -10,10 +10,16 @@ const AddUserPage = () => {
     const [lastName, setLastName] = useState('');
     const [role, setRole] = useState('Employee');
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [loading, setLoading] = useState(false); // Состояние загрузки
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+        setSuccessMessage('');
+        setLoading(true); // Включаем состояние загрузки
+
         try {
             const userData = {
                 username,
@@ -23,14 +29,20 @@ const AddUserPage = () => {
                 last_name: lastName,
                 role,
             };
-            const result = await apiCreateUser(userData);
-            if (result.success) {
-                navigate('/home');
+
+            const response = await apiCreateUser(userData);
+
+            // Проверяем успешность ответа
+            if (response && JSON.stringify(response).includes('"id":')) {
+                setSuccessMessage('Пользователь успешно создан!');
+                setTimeout(() => navigate('/home'), 500);
             } else {
-                setError('Ошибка при создании пользователя.');
+                setError('Ошибка при создании пользователя. Пожалуйста, попробуйте ещё раз.');
             }
         } catch (err) {
-            setError('Произошла ошибка. Пожалуйста, попробуйте снова.');
+            setError(`Произошла ошибка: ${err.message || 'Неизвестная ошибка.'}`);
+        } finally {
+            setLoading(false); // Отключаем состояние загрузки
         }
     };
 
@@ -38,6 +50,7 @@ const AddUserPage = () => {
         <div className="container mt-5">
             <h2 className="text-center">Добавить пользователя</h2>
             {error && <div className="alert alert-danger">{error}</div>}
+            {successMessage && <div className="alert alert-success">{successMessage}</div>}
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="username" className="form-label">Имя пользователя</label>
@@ -107,7 +120,13 @@ const AddUserPage = () => {
                         <option value="Employee">Employee</option>
                     </select>
                 </div>
-                <button type="submit" className="btn btn-primary w-100">Создать пользователя</button>
+                <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+                    {loading ? (
+                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    ) : (
+                        'Создать пользователя'
+                    )}
+                </button>
             </form>
         </div>
     );

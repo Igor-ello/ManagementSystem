@@ -1,103 +1,133 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiCreateTask } from '../api/api'; // Импортируем функцию для создания задачи
+import { apiCreateTask } from '../api/api'; // Импорт функции для создания задачи
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const AddTaskPage = () => {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [status, setStatus] = useState('To Do');
-    const [dueDate, setDueDate] = useState('');
-    const [startDate, setStartDate] = useState('');
-    const [project, setProject] = useState('');
-    const [assignees, setAssignees] = useState('');
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        status: 'To Do',
+        start_date: '',
+        due_date: '',
+        project: '',
+        assignees: '',
+    });
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [loading, setLoading] = useState(false); // Добавленное состояние загрузки
     const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+        setSuccessMessage('');
+        setLoading(true); // Включаем состояние загрузки
+
         try {
-            const assigneesArray = assignees.split(',').map((id) => parseInt(id.trim()));
-            const taskData = {
-                title,
-                description,
-                status,
-                due_date: dueDate,
-                start_date: startDate,
-                project: parseInt(project),
-                assignees: assigneesArray,
+            const payload = {
+                ...formData,
+                assignees: formData.assignees
+                    ? formData.assignees.split(',').map((id) => parseInt(id.trim()))
+                    : [],
+                project: parseInt(formData.project),
             };
-            const result = await apiCreateTask(taskData);
-            if (result.success) {
-                navigate('/home');
+            const response = await apiCreateTask(payload);
+
+            // Проверяем успешность ответа
+            if (response && JSON.stringify(response).includes('"id":')) {
+                setSuccessMessage('Задача успешно создана!');
+                setTimeout(() => navigate('/home'), 500);
             } else {
-                setError('Ошибка при создании задачи.');
+                setError('Не удалось создать задачу. Пожалуйста, попробуйте ещё раз.');
             }
         } catch (err) {
-            setError('Произошла ошибка. Пожалуйста, попробуйте снова.');
+            setError(`Произошла ошибка: ${err.message || 'Неизвестная ошибка'}`);
+        } finally {
+            setLoading(false); // Отключаем состояние загрузки
         }
     };
 
     return (
         <div className="container mt-5">
-            <h2 className="text-center">Добавить задачу</h2>
-            {error && <div className="alert alert-danger">{error}</div>}
+            <h1 className="text-center mb-4">Добавить задачу</h1>
+            {error && (
+                <div className="alert alert-danger text-center" role="alert">
+                    {error}
+                </div>
+            )}
+            {successMessage && (
+                <div className="alert alert-success text-center" role="alert">
+                    {successMessage}
+                </div>
+            )}
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                    <label htmlFor="title" className="form-label">Название задачи</label>
+                    <label htmlFor="title" className="form-label">Название</label>
                     <input
                         type="text"
                         className="form-control"
                         id="title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        name="title"
+                        value={formData.title}
+                        onChange={handleChange}
                         required
                     />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="description" className="form-label">Описание задачи</label>
+                    <label htmlFor="description" className="form-label">Описание</label>
                     <textarea
                         className="form-control"
                         id="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        rows="3"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleChange}
                         required
                     />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="status" className="form-label">Статус</label>
                     <select
-                        className="form-select"
+                        className="form-control"
                         id="status"
-                        value={status}
-                        onChange={(e) => setStatus(e.target.value)}
+                        name="status"
+                        value={formData.status}
+                        onChange={handleChange}
+                        required
                     >
-                        <option value="To Do">To Do</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Done">Done</option>
-                        <option value="Blocked">Blocked</option>
-                        <option value="In Review">In Review</option>
+                        <option>To Do</option>
+                        <option>In Progress</option>
+                        <option>Done</option>
+                        <option>Blocked</option>
+                        <option>In Review</option>
                     </select>
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="dueDate" className="form-label">Дата завершения</label>
+                    <label htmlFor="start_date" className="form-label">Дата начала</label>
                     <input
                         type="date"
                         className="form-control"
-                        id="dueDate"
-                        value={dueDate}
-                        onChange={(e) => setDueDate(e.target.value)}
+                        id="start_date"
+                        name="start_date"
+                        value={formData.start_date}
+                        onChange={handleChange}
                         required
                     />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="startDate" className="form-label">Дата начала</label>
+                    <label htmlFor="due_date" className="form-label">Дата завершения</label>
                     <input
                         type="date"
                         className="form-control"
-                        id="startDate"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
+                        id="due_date"
+                        name="due_date"
+                        value={formData.due_date}
+                        onChange={handleChange}
                         required
                     />
                 </div>
@@ -107,8 +137,9 @@ const AddTaskPage = () => {
                         type="number"
                         className="form-control"
                         id="project"
-                        value={project}
-                        onChange={(e) => setProject(e.target.value)}
+                        name="project"
+                        value={formData.project}
+                        onChange={handleChange}
                         required
                     />
                 </div>
@@ -118,12 +149,18 @@ const AddTaskPage = () => {
                         type="text"
                         className="form-control"
                         id="assignees"
-                        value={assignees}
-                        onChange={(e) => setAssignees(e.target.value)}
-                        required
+                        name="assignees"
+                        value={formData.assignees}
+                        onChange={handleChange}
                     />
                 </div>
-                <button type="submit" className="btn btn-primary w-100">Создать задачу</button>
+                <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+                    {loading ? (
+                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    ) : (
+                        'Добавить задачу'
+                    )}
+                </button>
             </form>
         </div>
     );

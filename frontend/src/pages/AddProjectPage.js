@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { apiCreateProject } from '../api/api'; // Импортируем функцию для создания проекта
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {useNavigate} from "react-router-dom";
 
 const AddProjectPage = () => {
     const [name, setName] = useState('');
@@ -10,6 +11,7 @@ const AddProjectPage = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     // Обработчик для отправки данных формы
     const handleSubmit = async (e) => {
@@ -28,11 +30,14 @@ const AddProjectPage = () => {
                 status,
             };
 
-            const result = await apiCreateProject(projectData); // Отправляем данные на сервер
-            if (result.success) {
+            const response = await apiCreateProject(projectData); // Отправляем данные на сервер
+
+            // Проверяем успешность ответа
+            if (response && JSON.stringify(response).includes('"id":')) {
                 setSuccess('Проект успешно создан!');
+                setTimeout(() => navigate('/home'), 500);
             } else {
-                setError(result.message || 'Ошибка при создании проекта.');
+                setError('Ошибка при создании проекта. Пожалуйста, попробуйте ещё раз.');
             }
         } catch (err) {
             setError(`Произошла ошибка: ${err.message || 'Неизвестная ошибка'}`);
@@ -97,7 +102,7 @@ const AddProjectPage = () => {
                         onChange={(e) => setStatus(e.target.value)}
                     >
                         <option value="Active">Active</option>
-                        <option value="Inactive">Archived</option>
+                        <option value="Archived">Archived</option>
                     </select>
                 </div>
 
