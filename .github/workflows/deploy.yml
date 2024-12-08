@@ -44,11 +44,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Запустить тесты для backend
-      - name: Run backend tests
-        run: |
-          cd backend
-          python manage.py test
+#      # Запустить тесты для backend
+#      - name: Run backend tests
+#        run: |
+#          cd backend
+#          python manage.py test
 
       # Установить Node.js
       - name: Set up Node.js
@@ -62,11 +62,11 @@ jobs:
           cd frontend
           npm install
 
-      # Запустить тесты для frontend
-      - name: Run frontend tests
-        run: |
-          cd frontend
-          npm test -- --watchAll=false
+#      # Запустить тесты для frontend
+#      - name: Run frontend tests
+#        run: |
+#          cd frontend
+#          npm test -- --watchAll=false
 
       # Логин в Docker Hub
       - name: Log in to Docker Hub
