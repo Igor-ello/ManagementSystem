@@ -7,10 +7,6 @@ on:
   workflow_dispatch:  # Разрешить ручной запуск workflow
 
 jobs:
-  run_pull:
-    name: run pull
-    runs-on: ubuntu-latest
-
   build-and-deploy:
     name: Build, Test, and Deploy
     runs-on: ubuntu-latest
