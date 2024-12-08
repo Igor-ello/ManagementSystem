@@ -88,13 +88,16 @@ jobs:
       - name: Deploy to server
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SERVER_IP: ${{ secrets.SERVER_IP }}  # Добавляем переменную окружения SERVER_IP
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
         run: |
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh -o StrictHostKeyChecking=no user@$SERVER_IP << EOF
-            # Перейти в папку с docker-compose.yml
+          echo "$SSH_PUBLIC_KEY" >> ~/.ssh/authorized_keys  # Добавляем публичный ключ в authorized_keys
+          
+          # Перезапускаем сервер через SSH
+          ssh -o StrictHostKeyChecking=no user@${{ secrets.SERVER_IP }} << EOF
             cd /path/to/docker-compose
             # Обновить образы
             docker-compose pull
