@@ -96,12 +96,10 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "$SSH_PUBLIC_KEY" >> ~/.ssh/authorized_keys  # Добавляем публичный ключ в authorized_keys
           
-          # Перезапускаем сервер через SSH
-          ssh -o StrictHostKeyChecking=no user@${{ secrets.SERVER_IP }} << EOF
+          # Перезапускаем сервер через SSH с выделением псевдотерминала
+          ssh -v -tt -o StrictHostKeyChecking=no user@${{ secrets.SERVER_IP }} << EOF
             cd /path/to/docker-compose
-            # Обновить образы
             docker-compose pull
-            # Перезапустить контейнеры
             docker-compose down
             docker-compose up -d
           EOF
