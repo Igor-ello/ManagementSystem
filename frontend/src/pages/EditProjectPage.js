@@ -9,6 +9,7 @@ const EditProjectPage = () => {
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [formData, setFormData] = useState({ name: '', description: '' });
   const token = localStorage.getItem('access_token');
 
@@ -16,9 +17,6 @@ const EditProjectPage = () => {
     const fetchProject = async () => {
       try {
         const response = await apiGetEntity('projects', id, token);
-        console.log(response);
-        console.log(response.data);
-        console.log(JSON.stringify(response));
         setProject(response.data);
         setFormData({ name: response.data.name, description: response.data.description });
       } catch {
@@ -39,7 +37,8 @@ const EditProjectPage = () => {
   const handleSave = async () => {
     try {
       await apiUpdateEntity('projects', id, formData, token);
-      navigate('/home');
+      setSuccess('Проект успешно сохранен!');
+      setTimeout(() => navigate('/home'), 500);
     } catch {
       setError('Ошибка при сохранении данных проекта');
     }
@@ -48,50 +47,63 @@ const EditProjectPage = () => {
   const handleDelete = async () => {
     try {
       await apiDeleteEntity('projects', id, token);
-      navigate('/home');
+      setSuccess('Проект успешно удален!');
+      setTimeout(() => navigate('/home'), 500);
     } catch {
       setError('Ошибка при удалении проекта');
     }
   };
 
   if (loading) {
-    return <div className="text-center mt-5">Загрузка...</div>;
-  }
-
-  if (error) {
-    return <div className="alert alert-danger">{error}</div>;
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '50vh' }}>
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Загрузка...</span>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="container mt-5">
-      <h1 className="mb-4">Редактирование проекта</h1>
-      <form>
-        <div className="mb-3">
-          <label className="form-label">Название</label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Описание</label>
-          <textarea
-            className="form-control"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-          />
-        </div>
-        <button type="button" className="btn btn-success me-2" onClick={handleSave}>
-          Сохранить
-        </button>
-        <button type="button" className="btn btn-danger" onClick={handleDelete}>
-          Удалить
-        </button>
-      </form>
+      <h1 className="text-center mb-4">Редактирование проекта</h1>
+
+      {error && <div className="alert alert-danger">{error}</div>}
+      {success && <div className="alert alert-success">{success}</div>}
+
+      {project && (
+        <form>
+          <div className="mb-3">
+            <label className="form-label">Название</label>
+            <input
+              type="text"
+              className="form-control"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Описание</label>
+            <textarea
+              className="form-control"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Кнопки действия */}
+          <div className="d-flex justify-content-between">
+            <button type="button" className="btn btn-success" onClick={handleSave}>
+              Сохранить
+            </button>
+            <button type="button" className="btn btn-danger" onClick={handleDelete}>
+              Удалить
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 };

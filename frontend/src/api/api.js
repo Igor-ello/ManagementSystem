@@ -109,7 +109,7 @@ export const apiGetEntity = async (entityType, id, token) => {
 };
 
 export const apiUpdateEntity = async (entityType, id, data, token) => {
-    const response = await axios.put(`${API_BASE_URL}/${entityType}/${id}/`, data, {
+    const response = await axios.patch(`${API_BASE_URL}/${entityType}/${id}/`, data, {
         headers: {
             Authorization: `Bearer ${token}`,
         },

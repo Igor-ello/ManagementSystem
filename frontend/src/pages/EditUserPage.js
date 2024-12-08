@@ -10,6 +10,7 @@ const EditUserPage = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [updatedData, setUpdatedData] = useState({});
     const token = localStorage.getItem('access_token');
 
@@ -36,7 +37,8 @@ const EditUserPage = () => {
     const handleSave = async () => {
         try {
             await apiUpdateEntity('users', id, updatedData, token);
-            navigate('/home');
+            setSuccess('Пользователь успешно обновлён!');
+            setTimeout(() => navigate('/home'), 500);
         } catch (err) {
             setError('Ошибка при сохранении изменений');
         }
@@ -45,7 +47,8 @@ const EditUserPage = () => {
     const handleDelete = async () => {
         try {
             await apiDeleteEntity('users', id, token);
-            navigate('/home');
+            setSuccess('Пользователь успешно удалён!');
+            setTimeout(() => navigate('/home'), 500);
         } catch (err) {
             setError('Ошибка при удалении пользователя');
         }
@@ -61,13 +64,13 @@ const EditUserPage = () => {
         );
     }
 
-    if (error) {
-        return <div className="alert alert-danger text-center">{error}</div>;
-    }
-
     return (
         <div className="container mt-5">
             <h1 className="text-center mb-4">Редактирование пользователя</h1>
+
+            {error && <div className="alert alert-danger">{error}</div>}
+            {success && <div className="alert alert-success">{success}</div>}
+
             {user && (
                 <form>
                     <div className="mb-3">

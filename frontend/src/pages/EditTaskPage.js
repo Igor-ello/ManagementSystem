@@ -10,6 +10,7 @@ const EditTaskPage = () => {
     const [task, setTask] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [updatedData, setUpdatedData] = useState({});
     const token = localStorage.getItem('access_token');
 
@@ -36,7 +37,8 @@ const EditTaskPage = () => {
     const handleSave = async () => {
         try {
             await apiUpdateEntity('tasks', id, updatedData, token);
-            navigate('/home');
+            setSuccess('Задача успешно сохранена!');
+            setTimeout(() => navigate('/home'), 500);
         } catch (err) {
             console.error('Error saving task:', err);  // Логируем ошибку при сохранении
             setError('Ошибка при сохранении изменений');
@@ -46,7 +48,8 @@ const EditTaskPage = () => {
     const handleDelete = async () => {
         try {
             await apiDeleteEntity('tasks', id, token);
-            navigate('/home');
+            setSuccess('Задача успешно удалена!');
+            setTimeout(() => navigate('/home'), 500);
         } catch (err) {
             console.error('Error deleting task:', err);  // Логируем ошибку при удалении
             setError('Ошибка при удалении задачи');
@@ -63,13 +66,13 @@ const EditTaskPage = () => {
         );
     }
 
-    if (error) {
-        return <div className="alert alert-danger text-center">{error}</div>;
-    }
-
     return (
         <div className="container mt-5">
             <h1 className="text-center mb-4">Редактирование задачи</h1>
+
+            {error && <div className="alert alert-danger">{error}</div>}
+            {success && <div className="alert alert-success">{success}</div>}
+
             {task && (
                 <form>
                     <div className="mb-3">
