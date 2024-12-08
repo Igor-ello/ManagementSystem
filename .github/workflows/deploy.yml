@@ -7,6 +7,10 @@ on:
   workflow_dispatch:  # Разрешить ручной запуск workflow
 
 jobs:
+  run_pull:
+    name: run pull
+    runs-on: ubuntu-latest
+
   build-and-deploy:
     name: Build, Test, and Deploy
     runs-on: ubuntu-latest
@@ -86,13 +90,12 @@ jobs:
 
       # Подготовка к деплою на сервер
       - name: Deploy to server
-        env:
-          SERVER_IP: ${{ secrets.SERVER_IP }}
         run: |
-          # Подключаемся к серверу через SSH и выполняем деплой
-          ssh -v -tt -o StrictHostKeyChecking=no user@${{ secrets.SERVER_IP }} << EOF
-            cd /path/to/docker-compose
-            docker-compose pull
-            docker-compose down
-            docker-compose up -d
-          EOF
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+
+      - name: Connect and pull
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull"
+#      - name: Cleanup
+#        run: rm -rf ~/.ssh
