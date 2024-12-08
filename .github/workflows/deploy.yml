@@ -87,16 +87,9 @@ jobs:
       # Подготовка к деплою на сервер
       - name: Deploy to server
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SERVER_IP: ${{ secrets.SERVER_IP }}
-          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          echo "$SSH_PUBLIC_KEY" >> ~/.ssh/authorized_keys  # Добавляем публичный ключ в authorized_keys
-          
-          # Перезапускаем сервер через SSH с выделением псевдотерминала
+          # Подключаемся к серверу через SSH и выполняем деплой
           ssh -v -tt -o StrictHostKeyChecking=no user@${{ secrets.SERVER_IP }} << EOF
             cd /path/to/docker-compose
             docker-compose pull
