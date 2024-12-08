@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const API_BASE_URL = 'http://localhost:8000/api'; // Базовый URL для API
+
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8000/api', // базовый URL для вашего API
+    baseURL: API_BASE_URL,
     headers: {
         'Content-Type': 'application/json'
     }
@@ -32,7 +34,7 @@ export const apiCreateProject = async (projectData) => {
     }
 };
 
-const API_BASE_URL = 'http://localhost:8000/api'; // Базовый URL для API
+
 
 // Функция для получения списка проектов
 export const apiGetProjects = async () => {
@@ -94,4 +96,32 @@ export const apiGetProfile = async (token) => {
     },
   });
   return response;
+};
+
+// Универсальные функции для работы с сущностями
+export const apiGetEntity = async (entityType, id, token) => {
+    const response = await axios.get(`${API_BASE_URL}/${entityType}/${id}/`, {
+        headers: {
+            Authorization: `Bearer ${token}`,  // Передаем токен в заголовке
+        }
+    });
+    return response;
+};
+
+export const apiUpdateEntity = async (entityType, id, data, token) => {
+    const response = await axios.put(`${API_BASE_URL}/${entityType}/${id}/`, data, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response;
+};
+
+export const apiDeleteEntity = async (entityType, id, token) => {
+    const response = await axios.delete(`${API_BASE_URL}/${entityType}/${id}/`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response;
 };
