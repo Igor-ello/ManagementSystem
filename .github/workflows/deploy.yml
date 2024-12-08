@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master  # Запускать Workflow при пуше в ветку master
+  workflow_dispatch:  # Разрешить ручной запуск workflow
 
 jobs:
   build-and-deploy:
