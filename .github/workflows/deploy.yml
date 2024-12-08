@@ -1,0 +1,103 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - master  # Запускать Workflow при пуше в ветку master
+
+jobs:
+  build-and-deploy:
+    name: Build, Test, and Deploy
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: project_db
+          POSTGRES_USER: postgres_user
+          POSTGRES_PASSWORD: postgres_password
+        options: >-
+          --health-cmd="pg_isready -U postgres_user"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+      redis:
+        image: redis:latest
+
+    steps:
+      # Проверить код из репозитория
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Установить Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      # Установить зависимости для backend
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Запустить тесты для backend
+      - name: Run backend tests
+        run: |
+          cd backend
+          python manage.py test
+
+      # Установить Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      # Установить зависимости для frontend
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm install
+
+      # Запустить тесты для frontend
+      - name: Run frontend tests
+        run: |
+          cd frontend
+          npm test -- --watchAll=false
+
+      # Логин в Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Собрать Docker-образы
+      - name: Build and push Docker images
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest ./backend
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest ./frontend
+          docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+
+      # Подготовка к деплою на сервер
+      - name: Deploy to server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}  # Добавляем переменную окружения SERVER_IP
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no user@$SERVER_IP << EOF
+            # Перейти в папку с docker-compose.yml
+            cd /path/to/docker-compose
+            # Обновить образы
+            docker-compose pull
+            # Перезапустить контейнеры
+            docker-compose down
+            docker-compose up -d
+          EOF
