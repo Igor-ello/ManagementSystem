@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:80/api'; // Базовый URL для API
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const axiosInstance = axios.create({
     baseURL: API_BASE_URL,
@@ -21,107 +21,97 @@ export const apiLogin = async ({ username, password }) => {
     }
 };
 
+// Проекты
 export const apiCreateProject = async (projectData) => {
-    try {
-        const response = await axios.post('http://localhost:8000/api/projects/', projectData, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-            }
-        });
-        return response.data; // Возвращаем данные с сервера
-    } catch (error) {
-        throw error; // Обрабатываем ошибку
-    }
+    const response = await axiosInstance.post('/projects/', projectData, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+    });
+    return response.data;
 };
 
-
-
-// Функция для получения списка проектов
 export const apiGetProjects = async () => {
-    const response = await axios.get(`${API_BASE_URL}/projects/`, {
+    const response = await axiosInstance.get('/projects/', {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
+        }
     });
     return response;
 };
 
-// Функция для получения списка задач
+// Задачи
 export const apiGetTasks = async () => {
-    const response = await axios.get(`${API_BASE_URL}/tasks/`, {
+    const response = await axiosInstance.get('/tasks/', {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
+        }
     });
     return response;
 };
 
-// Функция для получения пользователей
-export const apiGetUsers = async () => {
-    const response = await axios.get(`${API_BASE_URL}/users/`, {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
-    });
-    return response;
-};
-
-// Функция для создания задачи
 export const apiCreateTask = async (taskData) => {
-    const response = await axios.post(`${API_BASE_URL}/tasks/`, taskData, {
+    const response = await axiosInstance.post('/tasks/', taskData, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
+        }
     });
     return response.data;
 };
 
-// Функция для создания пользователя
+// Пользователи
+export const apiGetUsers = async () => {
+    const response = await axiosInstance.get('/users/', {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        }
+    });
+    return response;
+};
+
 export const apiCreateUser = async (userData) => {
-    const response = await axios.post(`${API_BASE_URL}/users/`, userData, {
+    const response = await axiosInstance.post('/users/', userData, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
+        }
     });
     return response.data;
 };
 
-const API_URL = 'http://localhost:8000/api/';
-
-// Получить профиль пользователя
+// Профиль
 export const apiGetProfile = async (token) => {
-  const response = await axios.get(`${API_URL}profile/`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response;
+    const response = await axiosInstance.get('/profile/', {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+    });
+    return response;
 };
 
-// Универсальные функции для работы с сущностями
+// Универсальные CRUD-функции
 export const apiGetEntity = async (entityType, id, token) => {
-    const response = await axios.get(`${API_BASE_URL}/${entityType}/${id}/`, {
+    const response = await axiosInstance.get(`/${entityType}/${id}/`, {
         headers: {
-            Authorization: `Bearer ${token}`,  // Передаем токен в заголовке
+            Authorization: `Bearer ${token}`,
         }
     });
     return response;
 };
 
 export const apiUpdateEntity = async (entityType, id, data, token) => {
-    const response = await axios.patch(`${API_BASE_URL}/${entityType}/${id}/`, data, {
+    const response = await axiosInstance.patch(`/${entityType}/${id}/`, data, {
         headers: {
             Authorization: `Bearer ${token}`,
-        },
+        }
     });
     return response;
 };
 
 export const apiDeleteEntity = async (entityType, id, token) => {
-    const response = await axios.delete(`${API_BASE_URL}/${entityType}/${id}/`, {
+    const response = await axiosInstance.delete(`/${entityType}/${id}/`, {
         headers: {
             Authorization: `Bearer ${token}`,
-        },
+        }
     });
     return response;
 };
