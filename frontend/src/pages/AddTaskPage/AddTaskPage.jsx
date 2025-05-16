@@ -1,169 +1,179 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiCreateTask } from '../../api/api'; // Импорт функции для создания задачи
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { apiCreateTask } from '../../api/api';
+import NavigationBar from 'components/NavigationBar/NavigationBar';
+import Footer from 'components/Footer/Footer';
+import './AddTaskPage.scss';
 
 const AddTaskPage = () => {
-    const [formData, setFormData] = useState({
-        title: '',
-        description: '',
-        status: 'To Do',
-        start_date: '',
-        due_date: '',
-        project: '',
-        assignees: '',
-    });
-    const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
-    const [loading, setLoading] = useState(false); // Добавленное состояние загрузки
-    const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    status: 'To Do',
+    start_date: '',
+    due_date: '',
+    project: '',
+    assignees: '',
+  });
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setSuccessMessage('');
-        setLoading(true); // Включаем состояние загрузки
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccessMessage('');
+    setLoading(true);
 
-        try {
-            const payload = {
-                ...formData,
-                assignees: formData.assignees
-                    ? formData.assignees.split(',').map((id) => parseInt(id.trim()))
-                    : [],
-                project: parseInt(formData.project),
-            };
-            const response = await apiCreateTask(payload);
+    try {
+      const payload = {
+        ...formData,
+        assignees: formData.assignees
+          ? formData.assignees.split(',').map((id) => parseInt(id.trim()))
+          : [],
+        project: parseInt(formData.project),
+      };
+      const response = await apiCreateTask(payload);
 
-            // Проверяем успешность ответа
-            if (response && JSON.stringify(response).includes('"id":')) {
-                setSuccessMessage('Задача успешно создана!');
-                setTimeout(() => navigate('/home'), 500);
-            } else {
-                setError('Не удалось создать задачу. Пожалуйста, попробуйте ещё раз.');
-            }
-        } catch (err) {
-            setError(`Произошла ошибка: ${err.message || 'Неизвестная ошибка'}`);
-        } finally {
-            setLoading(false); // Отключаем состояние загрузки
-        }
-    };
+      if (response && JSON.stringify(response).includes('"id":')) {
+        setSuccessMessage('Задача успешно создана!');
+        setTimeout(() => navigate('/home'), 500);
+      } else {
+        setError('Не удалось создать задачу. Пожалуйста, попробуйте ещё раз.');
+      }
+    } catch (err) {
+      setError(`Произошла ошибка: ${err.message || 'Неизвестная ошибка'}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
-        <div className="container mt-5">
-            <h1 className="text-center mb-4">Добавить задачу</h1>
-            {error && (
-                <div className="alert alert-danger text-center" role="alert">
-                    {error}
-                </div>
-            )}
-            {successMessage && (
-                <div className="alert alert-success text-center" role="alert">
-                    {successMessage}
-                </div>
-            )}
-            <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <label htmlFor="title" className="form-label">Название</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="title"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="description" className="form-label">Описание</label>
-                    <textarea
-                        className="form-control"
-                        id="description"
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="status" className="form-label">Статус</label>
-                    <select
-                        className="form-control"
-                        id="status"
-                        name="status"
-                        value={formData.status}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option>To Do</option>
-                        <option>In Progress</option>
-                        <option>Done</option>
-                        <option>Blocked</option>
-                        <option>In Review</option>
-                    </select>
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="start_date" className="form-label">Дата начала</label>
-                    <input
-                        type="date"
-                        className="form-control"
-                        id="start_date"
-                        name="start_date"
-                        value={formData.start_date}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="due_date" className="form-label">Дата завершения</label>
-                    <input
-                        type="date"
-                        className="form-control"
-                        id="due_date"
-                        name="due_date"
-                        value={formData.due_date}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="project" className="form-label">ID проекта</label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="project"
-                        name="project"
-                        value={formData.project}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="assignees" className="form-label">Исполнители (IDs через запятую)</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="assignees"
-                        name="assignees"
-                        value={formData.assignees}
-                        onChange={handleChange}
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-                    {loading ? (
-                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    ) : (
-                        'Добавить задачу'
-                    )}
-                </button>
-            </form>
+  return (
+    <>
+      <NavigationBar />
+
+      <div className="container mt-5">
+        <div className="card-block">
+          <form onSubmit={handleSubmit} className="card-block__form" id="task-form">
+            <h2 className="card-block__header mb-4">Добавить задачу</h2>
+
+            {error && <div className="text-danger fw-bold mb-3">{error}</div>}
+            {successMessage && <div className="text-accent fw-bold mb-3">{successMessage}</div>}
+
+            <label htmlFor="title" className="card-block__label">Название</label>
+            <input
+              id="title"
+              name="title"
+              type="text"
+              className="card-block__input"
+              value={formData.title}
+              onChange={handleChange}
+              placeholder="Введите название задачи"
+              required
+            />
+
+            <label htmlFor="description" className="card-block__label">Описание</label>
+            <textarea
+              id="description"
+              name="description"
+              className="card-block__textarea"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Введите описание задачи"
+              rows={4}
+              required
+            />
+
+            <label htmlFor="status" className="card-block__label">Статус</label>
+            <select
+              id="status"
+              name="status"
+              className="card-block__input"
+              value={formData.status}
+              onChange={handleChange}
+              required
+            >
+              <option value="To Do">To Do</option>
+              <option value="In Progress">In Progress</option>
+              <option value="In Review">In Review</option>
+              <option value="Done">Done</option>
+              <option value="Blocked">Blocked</option>
+            </select>
+
+            <label htmlFor="start_date" className="card-block__label">Дата начала</label>
+            <input
+              id="start_date"
+              name="start_date"
+              type="date"
+              className="card-block__input"
+              value={formData.start_date}
+              onChange={handleChange}
+              required
+            />
+
+            <label htmlFor="due_date" className="card-block__label">Дата завершения</label>
+            <input
+              id="due_date"
+              name="due_date"
+              type="date"
+              className="card-block__input"
+              value={formData.due_date}
+              onChange={handleChange}
+              required
+            />
+
+            <label htmlFor="project" className="card-block__label">ID проекта</label>
+            <input
+              id="project"
+              name="project"
+              type="number"
+              className="card-block__input"
+              value={formData.project}
+              onChange={handleChange}
+              required
+            />
+
+            <label htmlFor="assignees" className="card-block__label">Исполнители (IDs через запятую)</label>
+            <input
+              id="assignees"
+              name="assignees"
+              type="text"
+              className="card-block__input"
+              value={formData.assignees}
+              onChange={handleChange}
+            />
+
+            <button
+              type="submit"
+              className="card-block__button mt-4"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              ) : (
+                'Добавить задачу'
+              )}
+            </button>
+          </form>
+
+          <div className="card-block__decoration">
+            <svg width="200" height="200" viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="50" fill="#B9FF66" />
+              <path d="M50 15 L61 85 L50 65 L39 85 Z" fill="black" />
+            </svg>
+          </div>
         </div>
-    );
+      </div>
+
+      <Footer />
+    </>
+  );
 };
 
 export default AddTaskPage;

@@ -48,87 +48,77 @@ const AddProjectPage = () => {
 
       <div className="container mt-5">
         <div className="card-block">
-          {/* Заголовок карточки */}
-          <div className="card-block__header">
-            Добавить новый проект
-          </div>
+          {/* Левая часть: форма */}
+          <form onSubmit={handleSubmit} className="card-block__form" id="add-project-form">
+            <h2 className="card-block__header mb-4">Добавить новый проект</h2>
 
-          {/* Тело карточки */}
-          <div className="card-block__body">
             {error && <div className="text-danger fw-bold mb-3">{error}</div>}
             {success && <div className="text-accent fw-bold mb-3">{success}</div>}
 
-            <form onSubmit={handleSubmit}>
-              <div className="mb-3">
-                <label htmlFor="name" className="form-label">Название проекта</label>
-                <input
-                  id="name"
-                  type="text"
-                  className="form-control"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Введите название проекта"
-                  required
-                />
-              </div>
+            <label htmlFor="name" className="card-block__label">Название проекта</label>
+            <input
+              id="name"
+              type="text"
+              className="card-block__input"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Введите название проекта"
+              required
+            />
 
-              <div className="mb-3">
-                <label htmlFor="description" className="form-label">Описание проекта</label>
-                <textarea
-                  id="description"
-                  className="form-control"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Введите описание проекта"
-                  required
-                  rows={4}
-                />
-              </div>
+            <label htmlFor="description" className="card-block__label">Описание проекта</label>
+            <textarea
+              id="description"
+              className="card-block__textarea"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Введите описание проекта"
+              rows={4}
+              required
+            />
 
-              <div className="mb-3">
-                <label htmlFor="participants" className="form-label">
-                  Участники проекта (IDs через запятую)
-                </label>
-                <input
-                  id="participants"
-                  type="text"
-                  className="form-control"
-                  value={participants}
-                  onChange={(e) => setParticipants(e.target.value)}
-                  placeholder="Введите ID участников через запятую"
-                  required
-                />
-              </div>
+            <label htmlFor="participants" className="card-block__label">Участники проекта (IDs через запятую)</label>
+            <input
+              id="participants"
+              type="text"
+              className="card-block__input"
+              value={participants}
+              onChange={(e) => setParticipants(e.target.value)}
+              placeholder="Введите ID участников"
+              required
+            />
 
-              <div className="mb-3">
-                <label htmlFor="status" className="form-label">Статус</label>
-                <select
-                  id="status"
-                  className="form-select"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                >
-                  <option value="Active">Active</option>
-                  <option value="Archived">Archived</option>
-                </select>
-              </div>
-            </form>
-          </div>
+            <label htmlFor="status" className="card-block__label">Статус</label>
+            <select
+              id="status"
+              className="card-block__input"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <option value="Active">Active</option>
+              <option value="Archived">Archived</option>
+            </select>
 
-          {/* Футер карточки с кнопкой */}
-          <div className="card-block__footer">
             <button
               type="submit"
-              form="add-project-form"
-              className="btn btn-dark"
-              onClick={handleSubmit}
+              className="card-block__button mt-4"
               disabled={loading}
             >
-              {loading
-                ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                : 'Создать проект'
-              }
+              {loading ? (
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              ) : (
+                'Создать проект'
+              )}
             </button>
+          </form>
+
+          {/* Правая часть: декоративный блок */}
+          <div className="card-block__decoration">
+            {/* Пример SVG-декорации */}
+            <svg width="200" height="200" viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="50" fill="#B9FF66" />
+              <path d="M50 15 L61 85 L50 65 L39 85 Z" fill="black" />
+            </svg>
           </div>
         </div>
       </div>

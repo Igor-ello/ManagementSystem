@@ -1,135 +1,159 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiCreateUser } from '../../api/api'; // Импортируем функцию для создания пользователя
+import { apiCreateUser } from '../../api/api';
+import NavigationBar from 'components/NavigationBar/NavigationBar';
+import Footer from 'components/Footer/Footer';
+import './AddUserPage.scss';
 
 const AddUserPage = () => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [role, setRole] = useState('Employee');
-    const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
-    const [loading, setLoading] = useState(false); // Состояние загрузки
-    const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [role, setRole] = useState('Employee');
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setSuccessMessage('');
-        setLoading(true); // Включаем состояние загрузки
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccessMessage('');
+    setLoading(true);
 
-        try {
-            const userData = {
-                username,
-                email,
-                password,
-                first_name: firstName,
-                last_name: lastName,
-                role,
-            };
+    try {
+      const userData = {
+        username,
+        email,
+        password,
+        first_name: firstName,
+        last_name: lastName,
+        role,
+      };
 
-            const response = await apiCreateUser(userData);
+      const response = await apiCreateUser(userData);
 
-            // Проверяем успешность ответа
-            if (response && JSON.stringify(response).includes('"id":')) {
-                setSuccessMessage('Пользователь успешно создан!');
-                setTimeout(() => navigate('/home'), 500);
-            } else {
-                setError('Ошибка при создании пользователя. Пожалуйста, попробуйте ещё раз.');
-            }
-        } catch (err) {
-            setError(`Произошла ошибка: ${err.message || 'Неизвестная ошибка.'}`);
-        } finally {
-            setLoading(false); // Отключаем состояние загрузки
-        }
-    };
+      if (response && JSON.stringify(response).includes('"id":')) {
+        setSuccessMessage('Пользователь успешно создан!');
+        setTimeout(() => navigate('/home'), 500);
+      } else {
+        setError('Ошибка при создании пользователя. Пожалуйста, попробуйте ещё раз.');
+      }
+    } catch (err) {
+      setError(`Произошла ошибка: ${err.message || 'Неизвестная ошибка.'}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
-        <div className="container mt-5">
-            <h2 className="text-center">Добавить пользователя</h2>
-            {error && <div className="alert alert-danger">{error}</div>}
-            {successMessage && <div className="alert alert-success">{successMessage}</div>}
-            <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <label htmlFor="username" className="form-label">Имя пользователя</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Электронная почта</label>
-                    <input
-                        type="email"
-                        className="form-control"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Пароль</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="firstName" className="form-label">Имя</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="firstName"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="lastName" className="form-label">Фамилия</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="lastName"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="role" className="form-label">Роль</label>
-                    <select
-                        className="form-select"
-                        id="role"
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                    >
-                        <option value="Admin">Admin</option>
-                        <option value="Manager">Manager</option>
-                        <option value="Employee">Employee</option>
-                    </select>
-                </div>
-                <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-                    {loading ? (
-                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    ) : (
-                        'Создать пользователя'
-                    )}
-                </button>
-            </form>
+  return (
+    <>
+      <NavigationBar />
+
+      <div className="container mt-5">
+        <div className="card-block">
+          {/* Левая часть: форма */}
+          <form onSubmit={handleSubmit} className="card-block__form" id="add-user-form">
+            <h2 className="card-block__header mb-4">Добавить пользователя</h2>
+
+            {error && <div className="text-danger fw-bold mb-3">{error}</div>}
+            {successMessage && <div className="text-accent fw-bold mb-3">{successMessage}</div>}
+
+            <label htmlFor="username" className="card-block__label">Имя пользователя</label>
+            <input
+              id="username"
+              type="text"
+              className="card-block__input"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Введите имя пользователя"
+              required
+            />
+
+            <label htmlFor="email" className="card-block__label">Электронная почта</label>
+            <input
+              id="email"
+              type="email"
+              className="card-block__input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Введите email"
+              required
+            />
+
+            <label htmlFor="password" className="card-block__label">Пароль</label>
+            <input
+              id="password"
+              type="password"
+              className="card-block__input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Введите пароль"
+              required
+            />
+
+            <label htmlFor="firstName" className="card-block__label">Имя</label>
+            <input
+              id="firstName"
+              type="text"
+              className="card-block__input"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="Введите имя"
+              required
+            />
+
+            <label htmlFor="lastName" className="card-block__label">Фамилия</label>
+            <input
+              id="lastName"
+              type="text"
+              className="card-block__input"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Введите фамилию"
+              required
+            />
+
+            <label htmlFor="role" className="card-block__label">Роль</label>
+            <select
+              id="role"
+              className="card-block__input"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <option value="Admin">Admin</option>
+              <option value="Manager">Manager</option>
+              <option value="Employee">Employee</option>
+            </select>
+
+            <button
+              type="submit"
+              className="card-block__button mt-4"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              ) : (
+                'Создать пользователя'
+              )}
+            </button>
+          </form>
+
+          {/* Правая часть: декоративный блок */}
+          <div className="card-block__decoration">
+            <svg width="200" height="200" viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="50" fill="#B9FF66" />
+              <path d="M50 15 L61 85 L50 65 L39 85 Z" fill="black" />
+            </svg>
+          </div>
         </div>
-    );
+      </div>
+
+      <Footer />
+    </>
+  );
 };
 
 export default AddUserPage;
