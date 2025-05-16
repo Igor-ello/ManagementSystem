@@ -1,0 +1,17 @@
+@import '../../styles/variables';
+
+.btn-primary {
+  background-color: $color-accent;
+  color: $color-bg;
+  border: none;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-sm;
+}
+
+.btn-secondary {
+  background-color: $color-text;
+  color: $color-bg;
+  border: none;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-sm;
+}

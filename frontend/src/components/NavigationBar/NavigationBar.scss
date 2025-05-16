@@ -1,0 +1,79 @@
+@import '../../styles/variables';
+
+.navigation-bar {
+    background-color: $color-bg;
+    padding-top: $spacing-md;
+    padding-bottom: $spacing-md;
+    box-shadow: $shadow-sm;
+
+    .navbar-brand {
+        .logo {
+            height: 40px;
+        }
+    }
+
+    .nav-link {
+        color: $color-text;
+        font-family: $font-family-base;
+        font-weight: $font-weight-regular;
+        font-size: $font-size-base;
+        margin-right: $spacing-lg;
+        transition: color 0.3s;
+
+        &:hover,
+        &.active {
+            color: $color-accent;
+        }
+    }
+
+    .btn-primary {
+        background-color: $color-accent;
+        color: $color-dark;
+        border: none;
+        padding: $spacing-sm $spacing-xl;
+        border-radius: $border-radius-md;
+        font-family: $font-family-base;
+        font-size: $font-size-base;
+        font-weight: $font-weight-bold;
+        transition: background-color 0.3s;
+
+        &:hover {
+            background-color: lighten($color-accent, 5%);
+        }
+    }
+
+    .navbar-toggler {
+        border: none;
+
+        &:focus {
+            box-shadow: none;
+        }
+
+        .navbar-toggler-icon {
+            background-image: none;
+            width: 24px;
+            height: 2px;
+            background-color: $color-text;
+            display: block;
+            position: relative;
+
+            &::after,
+            &::before {
+                content: '';
+                position: absolute;
+                width: 24px;
+                height: 2px;
+                background-color: $color-text;
+                left: 0;
+            }
+
+            &::before {
+                top: -8px;
+            }
+
+            &::after {
+                top: 8px;
+            }
+        }
+    }
+}

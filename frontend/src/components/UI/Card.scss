@@ -1,0 +1,17 @@
+@import '../../styles/variables';
+
+.custom-card {
+  border: 1px solid $color-gray;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-md;
+  padding: $spacing-md;
+  .card-title {
+    font-family: $font-family-base;
+    font-size: 1.5rem;
+    margin-bottom: $spacing-sm;
+  }
+  .card-text {
+    margin-bottom: $spacing-md;
+    color: $color-text;
+  }
+}

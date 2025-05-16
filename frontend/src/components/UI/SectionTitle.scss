@@ -1,0 +1,9 @@
+@import '../../styles/variables';
+
+.section-title {
+  font-family: $font-family-base;
+  font-weight: $font-weight-bold;
+  font-size: 2rem;
+  margin-bottom: $spacing-lg;
+  color: $color-text;
+}

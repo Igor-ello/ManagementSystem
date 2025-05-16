@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { apiGetEntity, apiUpdateEntity, apiDeleteEntity } from '../api/api';
+import { apiGetEntity, apiUpdateEntity, apiDeleteEntity } from '../../api/api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const EditProjectPage = () => {

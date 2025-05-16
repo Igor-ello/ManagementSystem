@@ -1,14 +1,14 @@
 import React from 'react';
 import {BrowserRouter as Router, Navigate, Route, Routes} from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import AddProjectPage from './pages/AddProjectPage';
-import AddTaskPage from './pages/AddTaskPage';
-import AddUserPage from './pages/AddUserPage';
-import EditProjectPage from './pages/EditProjectPage';
-import EditTaskPage from './pages/EditTaskPage';
-import EditUserPage from './pages/EditUserPage';
-import ProfilePage from "./pages/ProfilePage";
+import HomePage from './pages/HomePage/HomePage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import AddProjectPage from './pages/AddProjectPage/AddProjectPage';
+import AddTaskPage from './pages/AddTaskPage/AddTaskPage';
+import AddUserPage from './pages/AddUserPage/AddUserPage';
+import EditProjectPage from './pages/EditProjectPage/EditProjectPage';
+import EditTaskPage from './pages/EditTaskPage/EditTaskPage';
+import EditUserPage from './pages/EditUserPage/EditUserPage';
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import { isAuthenticated } from './utils/auth';
 
 const App = () => {

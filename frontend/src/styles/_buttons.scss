@@ -1,0 +1,60 @@
+@import 'variables';
+
+.btn {
+  font-family: $font-family-base;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-base;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-md;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: $shadow-sm;
+
+  &.btn-accent {
+    background-color: $color-accent;
+    color: $color-dark;
+
+    &:hover {
+      background-color: darken($color-accent, 5%);
+      box-shadow: $shadow-md;
+    }
+
+    &:active {
+      background-color: darken($color-accent, 10%);
+      box-shadow: $shadow-lg;
+    }
+  }
+
+  &.btn-outline {
+    background-color: transparent;
+    border: 2px solid $color-accent;
+    color: $color-accent;
+
+    &:hover {
+      background-color: $color-accent;
+      color: $color-dark;
+    }
+
+    &:active {
+      background-color: darken($color-accent, 10%);
+      color: $color-dark;
+    }
+  }
+
+  &.btn-dark {
+    background-color: $color-dark;
+    color: #fff;
+
+    &:hover {
+      background-color: darken($color-dark, 5%);
+    }
+
+    &:active {
+      background-color: darken($color-dark, 10%);
+    }
+  }
+}

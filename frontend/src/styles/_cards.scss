@@ -1,0 +1,41 @@
+@import 'variables';
+
+.card {
+  border: none;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+  background-color: $color-bg;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: $shadow-md;
+  }
+
+  .card-img-top {
+    border-bottom: 1px solid $color-gray;
+    object-fit: cover;
+    width: 100%;
+    height: 180px;
+  }
+
+  .card-body {
+    padding: $spacing-md;
+
+    .card-title {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      color: $color-text;
+      margin-bottom: $spacing-sm;
+    }
+
+    .card-text {
+      font-size: $font-size-sm;
+      color: $color-gray;
+    }
+
+    .btn {
+      margin-top: $spacing-sm;
+    }
+  }
+}

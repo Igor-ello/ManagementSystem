@@ -1,0 +1,49 @@
+@import 'styles/variables';
+
+.homepage {
+  padding: $spacing-xl;
+  background-color: $color-bg;
+  font-family: $font-family-base;
+  color: $color-text;
+
+  h1 {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $color-text;
+    margin-bottom: $spacing-lg;
+    text-align: center;
+  }
+
+  .section-title {
+    font-size: $font-size-md;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-md;
+    color: $color-text;
+  }
+
+  .text-muted {
+    color: $color-gray !important;
+  }
+
+  .text-danger {
+    color: $color-danger !important;
+  }
+
+  .text-secondary {
+    color: $color-gray !important;
+  }
+
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .fw-bold {
+    font-weight: $font-weight-bold;
+  }
+
+  .my-3 {
+    margin-top: $spacing-md;
+    margin-bottom: $spacing-md;
+  }
+}

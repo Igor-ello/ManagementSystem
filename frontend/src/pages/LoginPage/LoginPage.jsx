@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiLogin } from '../api/api'; // Функция для авторизации
+import { apiLogin } from '../../api/api'; // Функция для авторизации
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const LoginPage = () => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiCreateUser } from '../api/api'; // Импортируем функцию для создания пользователя
+import { apiCreateUser } from '../../api/api'; // Импортируем функцию для создания пользователя
 
 const AddUserPage = () => {
     const [username, setUsername] = useState('');

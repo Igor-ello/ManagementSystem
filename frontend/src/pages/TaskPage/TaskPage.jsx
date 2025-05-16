@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { apiGetTaskDetails, apiUpdateTaskStatus } from '../api/api'; // API-функции
+import { apiGetTaskDetails, apiUpdateTaskStatus } from '../../api/api'; // API-функции
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const TaskPage = () => {

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { apiGetEntity, apiUpdateEntity, apiDeleteEntity } from '../api/api';
+import { apiGetEntity, apiUpdateEntity, apiDeleteEntity } from '../../api/api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const EditUserPage = () => {
+const EditTaskPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const [user, setUser] = useState(null);
+    const [task, setTask] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
@@ -15,18 +15,18 @@ const EditUserPage = () => {
     const token = localStorage.getItem('access_token');
 
     useEffect(() => {
-        const fetchUser = async () => {
+        const fetchTask = async () => {
             try {
-                const response = await apiGetEntity('users', id, token);
-                setUser(response.data);
+                const response = await apiGetEntity('tasks', id, token);
+                setTask(response.data);
                 setUpdatedData(response.data);
             } catch (err) {
-                setError('Ошибка загрузки пользователя');
+                setError('Ошибка загрузки задачи');
             } finally {
                 setLoading(false);
             }
         };
-        fetchUser();
+        fetchTask();
     }, [id]);
 
     const handleInputChange = (e) => {
@@ -36,21 +36,23 @@ const EditUserPage = () => {
 
     const handleSave = async () => {
         try {
-            await apiUpdateEntity('users', id, updatedData, token);
-            setSuccess('Пользователь успешно обновлён!');
+            await apiUpdateEntity('tasks', id, updatedData, token);
+            setSuccess('Задача успешно сохранена!');
             setTimeout(() => navigate('/home'), 500);
         } catch (err) {
+            console.error('Error saving task:', err);  // Логируем ошибку при сохранении
             setError('Ошибка при сохранении изменений');
         }
     };
 
     const handleDelete = async () => {
         try {
-            await apiDeleteEntity('users', id, token);
-            setSuccess('Пользователь успешно удалён!');
+            await apiDeleteEntity('tasks', id, token);
+            setSuccess('Задача успешно удалена!');
             setTimeout(() => navigate('/home'), 500);
         } catch (err) {
-            setError('Ошибка при удалении пользователя');
+            console.error('Error deleting task:', err);  // Логируем ошибку при удалении
+            setError('Ошибка при удалении задачи');
         }
     };
 
@@ -66,30 +68,29 @@ const EditUserPage = () => {
 
     return (
         <div className="container mt-5">
-            <h1 className="text-center mb-4">Редактирование пользователя</h1>
+            <h1 className="text-center mb-4">Редактирование задачи</h1>
 
             {error && <div className="alert alert-danger">{error}</div>}
             {success && <div className="alert alert-success">{success}</div>}
 
-            {user && (
+            {task && (
                 <form>
                     <div className="mb-3">
-                        <label className="form-label">Имя пользователя</label>
+                        <label className="form-label">Название</label>
                         <input
                             type="text"
                             className="form-control"
-                            name="username"
-                            value={updatedData.username || ''}
+                            name="title"
+                            value={updatedData.title || ''}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div className="mb-3">
-                        <label className="form-label">Email</label>
-                        <input
-                            type="email"
+                        <label className="form-label">Описание</label>
+                        <textarea
                             className="form-control"
-                            name="email"
-                            value={updatedData.email || ''}
+                            name="description"
+                            value={updatedData.description || ''}
                             onChange={handleInputChange}
                         />
                     </div>
@@ -107,4 +108,4 @@ const EditUserPage = () => {
     );
 };
 
-export default EditUserPage;
+export default EditTaskPage;

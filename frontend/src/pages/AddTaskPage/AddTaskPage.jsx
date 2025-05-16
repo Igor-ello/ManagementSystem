@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiCreateTask } from '../api/api'; // Импорт функции для создания задачи
+import { apiCreateTask } from '../../api/api'; // Импорт функции для создания задачи
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const AddTaskPage = () => {

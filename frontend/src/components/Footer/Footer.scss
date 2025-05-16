@@ -1,0 +1,72 @@
+.footer {
+  background-color: #000;
+  color: #fff;
+  padding: 4rem 0;
+
+  &__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  &__branding {
+    flex: 1 1 200px;
+  }
+
+  &__logo {
+    height: 40px;
+    margin-bottom: 1rem;
+  }
+
+  &__copyright {
+    font-size: 0.875rem;
+    color: #ccc;
+  }
+
+  &__links {
+    display: flex;
+    flex: 2 1 400px;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+    h5 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin-bottom: 0.25rem;
+
+        a {
+          color: #aaa;
+          text-decoration: none;
+          font-size: 0.9rem;
+
+          &:hover {
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+
+  &__social {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #aaa;
+
+    svg {
+      cursor: pointer;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { apiGetProjectDetails } from '../api/api'; // Функция для получения деталей проекта
+import { apiGetProjectDetails } from '../../api/api'; // Функция для получения деталей проекта
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ProjectPage = () => {

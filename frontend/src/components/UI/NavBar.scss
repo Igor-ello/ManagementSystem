@@ -1,0 +1,16 @@
+@import '../../styles/variables';
+
+.navbar {
+  padding: $spacing-md;
+  .navbar-brand {
+    font-family: $font-family-base;
+    font-weight: $font-weight-bold;
+  }
+  .nav-link {
+    color: $color-text;
+    margin-right: $spacing-lg;
+    &:hover {
+      color: $color-accent;
+    }
+  }
+}

@@ -1,0 +1,11 @@
+@import '../../styles/variables';
+
+.text-input {
+  border: 1px solid $color-gray;
+  border-radius: $border-radius-sm;
+  padding: $spacing-sm;
+  &:focus {
+    border-color: $color-accent;
+    box-shadow: $shadow-sm;
+  }
+}

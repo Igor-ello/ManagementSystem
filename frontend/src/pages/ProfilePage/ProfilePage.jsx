@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiGetProfile } from '../api/api';
+import { apiGetProfile } from '../../api/api';
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
