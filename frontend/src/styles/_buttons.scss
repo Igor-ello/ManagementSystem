@@ -2,7 +2,7 @@
 
 .btn {
   font-family: $font-family-base;
-  font-weight: $font-weight-bold;
+  font-weight: $font-weight-regular;
   font-size: $font-size-base;
   padding: $spacing-sm $spacing-md;
   border-radius: $border-radius-md;
@@ -55,6 +55,22 @@
 
     &:active {
       background-color: darken($color-dark, 10%);
+    }
+  }
+
+  &.btn-light {
+    background-color: $color-light;
+    border: 1px solid $color-dark;
+    color: $color-dark;
+
+    &:hover {
+      background-color: darken($color-accent, 5%);
+      border: 1px solid $color-accent;
+    }
+
+    &:active {
+      background-color: darken($color-accent, 10%);
+      border: 1px solid $color-accent;
     }
   }
 }

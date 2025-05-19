@@ -4,6 +4,7 @@ import { apiCreateUser } from '../../api/api';
 import NavigationBar from 'components/NavigationBar/NavigationBar';
 import Footer from 'components/Footer/Footer';
 import './AddUserPage.scss';
+import decoration from "../../assets/decoration.svg";
 
 const AddUserPage = () => {
   const [username, setUsername] = useState('');
@@ -63,65 +64,65 @@ const AddUserPage = () => {
 
             <label htmlFor="username" className="card-block__label">Имя пользователя</label>
             <input
-              id="username"
-              type="text"
-              className="card-block__input"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Введите имя пользователя"
-              required
+                id="username"
+                type="text"
+                className="card-block__input"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Введите имя пользователя"
+                required
             />
 
             <label htmlFor="email" className="card-block__label">Электронная почта</label>
             <input
-              id="email"
-              type="email"
-              className="card-block__input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Введите email"
-              required
+                id="email"
+                type="email"
+                className="card-block__input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Введите email"
+                required
             />
 
             <label htmlFor="password" className="card-block__label">Пароль</label>
             <input
-              id="password"
-              type="password"
-              className="card-block__input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Введите пароль"
-              required
+                id="password"
+                type="password"
+                className="card-block__input"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Введите пароль"
+                required
             />
 
             <label htmlFor="firstName" className="card-block__label">Имя</label>
             <input
-              id="firstName"
-              type="text"
-              className="card-block__input"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder="Введите имя"
-              required
+                id="firstName"
+                type="text"
+                className="card-block__input"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Введите имя"
+                required
             />
 
             <label htmlFor="lastName" className="card-block__label">Фамилия</label>
             <input
-              id="lastName"
-              type="text"
-              className="card-block__input"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="Введите фамилию"
-              required
+                id="lastName"
+                type="text"
+                className="card-block__input"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Введите фамилию"
+                required
             />
 
             <label htmlFor="role" className="card-block__label">Роль</label>
             <select
-              id="role"
-              className="card-block__input"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
+                id="role"
+                className="card-block__input"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
             >
               <option value="Admin">Admin</option>
               <option value="Manager">Manager</option>
@@ -129,29 +130,30 @@ const AddUserPage = () => {
             </select>
 
             <button
-              type="submit"
-              className="card-block__button mt-4"
-              disabled={loading}
+                type="submit"
+                className="card-block__button mt-4"
+                disabled={loading}
             >
               {loading ? (
-                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
               ) : (
-                'Создать пользователя'
+                  'Создать пользователя'
               )}
             </button>
           </form>
 
           {/* Правая часть: декоративный блок */}
-          <div className="card-block__decoration">
-            <svg width="200" height="200" viewBox="0 0 100 100" fill="none">
-              <circle cx="50" cy="50" r="50" fill="#B9FF66" />
-              <path d="M50 15 L61 85 L50 65 L39 85 Z" fill="black" />
-            </svg>
+          <div className="card-block__decoration-wrapper">
+            <img
+                src={decoration}
+                alt="Decoration"
+                className="card-block__image"
+            />
           </div>
         </div>
       </div>
 
-      <Footer />
+      <Footer/>
     </>
   );
 };

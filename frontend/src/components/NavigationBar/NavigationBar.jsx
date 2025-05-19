@@ -1,14 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './NavigationBar.scss';
+import logo from 'assets/logo.svg'
 
 const NavigationBar = () => {
     return (
         <nav className="navigation-bar navbar navbar-expand-lg">
             <div className="container">
                 {/* Логотип */}
-                <Link className="navbar-brand" to="/">
-                    <img src="logo.svg" alt="Squadly Logo" className="logo"/>
+                <Link className="navbar-brand" to="/home">
+                    <img src={logo} alt="Squadly Logo" className="logo" width="25" height="auto"/>
+                    <h1>Squadly</h1>
                 </Link>
 
                 {/* Кнопка-бургер на мобильных */}
@@ -28,9 +30,6 @@ const NavigationBar = () => {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item">
-                            <Link className="nav-link" to="/home">Home</Link>
-                        </li>
-                        <li className="nav-item">
                             <Link className="nav-link" to="/add-project">Добавить проект</Link>
                         </li>
                         <li className="nav-item">
@@ -41,7 +40,7 @@ const NavigationBar = () => {
                         </li>
                     </ul>
 
-                    <Link to="/profile" className="btn btn-outline ms-3">Профиль</Link>
+                    <Link to="/profile" className="btn btn-light ms-3">Профиль</Link>
                 </div>
             </div>
         </nav>

@@ -7,8 +7,21 @@
     box-shadow: $shadow-sm;
 
     .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+
         .logo {
-            height: 40px;
+            height: 20px;
+            width: auto;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: $font-size-lg;
+            font-family: $font-family-base;
+            font-weight: $font-weight-bold;
+            color: $color-text;
         }
     }
 

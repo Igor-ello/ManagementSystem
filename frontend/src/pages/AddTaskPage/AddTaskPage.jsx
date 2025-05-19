@@ -4,6 +4,7 @@ import { apiCreateTask } from '../../api/api';
 import NavigationBar from 'components/NavigationBar/NavigationBar';
 import Footer from 'components/Footer/Footer';
 import './AddTaskPage.scss';
+import decoration from "../../assets/decoration.svg";
 
 const AddTaskPage = () => {
   const [formData, setFormData] = useState({
@@ -68,36 +69,36 @@ const AddTaskPage = () => {
 
             <label htmlFor="title" className="card-block__label">Название</label>
             <input
-              id="title"
-              name="title"
-              type="text"
-              className="card-block__input"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="Введите название задачи"
-              required
+                id="title"
+                name="title"
+                type="text"
+                className="card-block__input"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Введите название задачи"
+                required
             />
 
             <label htmlFor="description" className="card-block__label">Описание</label>
             <textarea
-              id="description"
-              name="description"
-              className="card-block__textarea"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Введите описание задачи"
-              rows={4}
-              required
+                id="description"
+                name="description"
+                className="card-block__textarea"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Введите описание задачи"
+                rows={4}
+                required
             />
 
             <label htmlFor="status" className="card-block__label">Статус</label>
             <select
-              id="status"
-              name="status"
-              className="card-block__input"
-              value={formData.status}
-              onChange={handleChange}
-              required
+                id="status"
+                name="status"
+                className="card-block__input"
+                value={formData.status}
+                onChange={handleChange}
+                required
             >
               <option value="To Do">To Do</option>
               <option value="In Progress">In Progress</option>
@@ -108,70 +109,71 @@ const AddTaskPage = () => {
 
             <label htmlFor="start_date" className="card-block__label">Дата начала</label>
             <input
-              id="start_date"
-              name="start_date"
-              type="date"
-              className="card-block__input"
-              value={formData.start_date}
-              onChange={handleChange}
-              required
+                id="start_date"
+                name="start_date"
+                type="date"
+                className="card-block__input"
+                value={formData.start_date}
+                onChange={handleChange}
+                required
             />
 
             <label htmlFor="due_date" className="card-block__label">Дата завершения</label>
             <input
-              id="due_date"
-              name="due_date"
-              type="date"
-              className="card-block__input"
-              value={formData.due_date}
-              onChange={handleChange}
-              required
+                id="due_date"
+                name="due_date"
+                type="date"
+                className="card-block__input"
+                value={formData.due_date}
+                onChange={handleChange}
+                required
             />
 
             <label htmlFor="project" className="card-block__label">ID проекта</label>
             <input
-              id="project"
-              name="project"
-              type="number"
-              className="card-block__input"
-              value={formData.project}
-              onChange={handleChange}
-              required
+                id="project"
+                name="project"
+                type="number"
+                className="card-block__input"
+                value={formData.project}
+                onChange={handleChange}
+                required
             />
 
             <label htmlFor="assignees" className="card-block__label">Исполнители (IDs через запятую)</label>
             <input
-              id="assignees"
-              name="assignees"
-              type="text"
-              className="card-block__input"
-              value={formData.assignees}
-              onChange={handleChange}
+                id="assignees"
+                name="assignees"
+                type="text"
+                className="card-block__input"
+                value={formData.assignees}
+                onChange={handleChange}
             />
 
             <button
-              type="submit"
-              className="card-block__button mt-4"
-              disabled={loading}
+                type="submit"
+                className="card-block__button mt-4"
+                disabled={loading}
             >
               {loading ? (
-                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
               ) : (
-                'Добавить задачу'
+                  'Добавить задачу'
               )}
             </button>
           </form>
 
-          <div className="card-block__decoration">
-            <svg width="200" height="200" viewBox="0 0 100 100" fill="none">
-              <circle cx="50" cy="50" r="50" fill="#B9FF66" />
-              <path d="M50 15 L61 85 L50 65 L39 85 Z" fill="black" />
-            </svg>
+          <div className="card-block__decoration-wrapper">
+            <img
+                src={decoration}
+                alt="Decoration"
+                className="card-block__image"
+            />
           </div>
         </div>
       </div>
 
-      <Footer />
+      <Footer/>
     </>
   );
 };

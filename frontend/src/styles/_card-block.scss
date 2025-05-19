@@ -84,4 +84,12 @@
     align-items: center;
     // Можно вставить svg-фон или декоративные блоки
   }
+
+  &__image {
+    transform: translateX(50%); // показываем только левую часть
+    max-height: 100%;
+    object-fit: contain;
+    margin-left: -#{$spacing-sm};
+    margin-right: -#{$spacing-sm};
+  }
 }
