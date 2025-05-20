@@ -5,45 +5,41 @@ import { Facebook, Twitter, Linkedin } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="footer">
-      <div className="footer__top container">
-        <div className="footer__branding">
-          <img src={logo} alt="Positivus" className="footer__logo" />
-          <p className="footer__copyright">© 2025 Positivus. All rights reserved.</p>
+    <footer className="custom-footer">
+      <div className="footer-top container">
+        <img src={logo} alt="Logo" className="footer-logo" />
+
+        <nav className="footer-nav">
+          <a href="#">About us</a>
+          <a href="#">Services</a>
+          <a href="#">Use Cases</a>
+          <a href="#">Pricing</a>
+          <a href="#">Blog</a>
+        </nav>
+
+        <div className="footer-social">
+          <Linkedin />
+          <Facebook />
+          <Twitter />
         </div>
-        <div className="footer__links">
-          <div>
-            <h5>About us</h5>
-            <ul>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Features</a></li>
-              <li><a href="#">Works</a></li>
-              <li><a href="#">Career</a></li>
-            </ul>
-          </div>
-          <div>
-            <h5>Services</h5>
-            <ul>
-              <li><a href="#">Design</a></li>
-              <li><a href="#">Development</a></li>
-              <li><a href="#">Marketing</a></li>
-              <li><a href="#">See More</a></li>
-            </ul>
-          </div>
-          <div>
-            <h5>Contact</h5>
-            <ul>
-              <li><a href="#">+123 456 789</a></li>
-              <li><a href="#">info@positivus.com</a></li>
-              <li><a href="#">123 Creative Ave</a></li>
-            </ul>
-          </div>
+      </div>
+
+      <div className="footer-middle container">
+        <div className="footer-contact">
+          <p className="footer-contact-label">Contact us:</p>
+          <p>Email: info@squadly.com</p>
+          <p>Phone: 8(916)5345040</p>
+          <p>Address: 1234 Main St<br />Moonstone City, Stardust State 12345</p>
         </div>
-        <div className="footer__social">
-          <Facebook size={20} />
-          <Twitter size={20} />
-          <Linkedin size={20} />
+
+        <div className="footer-subscribe">
+          <input type="email" placeholder="Email" />
+          <button>Subscribe to news</button>
         </div>
+      </div>
+
+      <div className="footer-bottom container">
+        <p>© 2025 Squadly.</p>
       </div>
     </footer>
   );

@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { apiGetProjects, apiGetTasks, apiGetUsers, apiGetProfile } from '../../api/api';
 import NavigationBar from 'components/NavigationBar/NavigationBar';
 import Footer from 'components/Footer/Footer';
 import './HomePage.scss';
+
+import UserCard from 'components/Cards/UserCard';
+import ProjectCard from 'components/Cards/ProjectCard';
+import TaskCard from 'components/Cards/TaskCard';
 
 const HomePage = () => {
     const [projects, setProjects] = useState([]);
@@ -73,23 +77,7 @@ const HomePage = () => {
                         <div className="row">
                             {projects.map((project) => (
                                 <div key={project.id} className="col-md-4 mb-4">
-                                    <div className="card h-100">
-                                        <img
-                                            src={`https://via.placeholder.com/300?text=${encodeURIComponent(project.name)}`}
-                                            className="card-img-top"
-                                            alt={project.name}
-                                        />
-                                        <div className="card-body">
-                                            <div className="d-flex justify-content-between">
-                                                <div>
-                                                    <h5 className="card-title">{project.name}</h5>
-                                                    <p className="card-text text-truncate">{project.description || 'Описание отсутствует'}</p>
-                                                </div>
-                                                <div className="text-muted">ID: {project.id}</div>
-                                            </div>
-                                            <Link to={`/projects/${project.id}`} className="btn btn-accent w-100 mt-2">Подробнее</Link>
-                                        </div>
-                                    </div>
+                                    <ProjectCard project={project} />
                                 </div>
                             ))}
                         </div>
@@ -108,18 +96,7 @@ const HomePage = () => {
                         <div className="row">
                             {tasks.map((task) => (
                                 <div key={task.id} className="col-md-4 mb-4">
-                                    <div className="card h-100">
-                                        <div className="card-body">
-                                            <div className="d-flex justify-content-between">
-                                                <div>
-                                                    <h5 className="card-title">{task.title}</h5>
-                                                    <p className="card-text text-truncate">{task.description || 'Описание отсутствует'}</p>
-                                                </div>
-                                                <div className="text-muted">ID: {task.id}</div>
-                                            </div>
-                                            <Link to={`/tasks/${task.id}`} className="btn btn-accent w-100 mt-2">Подробнее</Link>
-                                        </div>
-                                    </div>
+                                    <TaskCard task={task} />
                                 </div>
                             ))}
                         </div>
@@ -138,18 +115,7 @@ const HomePage = () => {
                         <div className="row">
                             {users.map((user) => (
                                 <div key={user.id} className="col-md-4 mb-4">
-                                    <div className="card h-100">
-                                        <div className="card-body">
-                                            <div className="d-flex justify-content-between">
-                                                <div>
-                                                    <h5 className="card-title">{user.username}</h5>
-                                                    <p className="card-text text-truncate">{user.email}</p>
-                                                </div>
-                                                <div className="text-muted">ID: {user.id}</div>
-                                            </div>
-                                            <Link to={`/users/${user.id}`} className="btn btn-accent w-100 mt-2">Подробнее</Link>
-                                        </div>
-                                    </div>
+                                    <UserCard user={user} />
                                 </div>
                             ))}
                         </div>

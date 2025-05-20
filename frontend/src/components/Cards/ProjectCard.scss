@@ -1,0 +1,187 @@
+@import '../../styles/variables';
+
+.project-card {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md;
+  flex-direction: row;
+  border-radius: $border-radius-md;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid $color-gray;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-lg;
+  }
+
+  &__image-container {
+    flex-shrink: 0;
+    margin-left: $spacing-lg;
+    height: 120px;
+    width: auto;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover &__image {
+    transform: scale(1.05);
+  }
+
+  &__content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title {
+    font-family: $font-family-base;
+    font-weight: $font-weight-bold;
+    font-size: $font-size-lg;
+    margin-bottom: $spacing-sm;
+    color: $color-text;
+  }
+
+  &__description {
+    font-size: $font-size-sm;
+    color: $color-text;
+    margin-bottom: $spacing-md;
+    flex-grow: 1;
+  }
+
+  &__link {
+    display: inline-block;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-sm;
+    font-weight: $font-weight-bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    text-align: center;
+  }
+
+  // Типы карточек
+  &--project1 {
+    background-color: $color-gray;
+
+    .project-card__title,
+    .project-card__description {
+      display: inline-block;
+      background-color: $color-accent;
+    }
+
+    .project-card__link {
+      display: inline-block;
+      background-color: $color-accent;
+      color: $color-black;
+
+      &:hover {
+        background-color: darken($color-accent, 20%);
+      }
+    }
+  }
+
+  &--project2 {
+    background-color: $color-accent;
+
+    .project-card__title,
+    .project-card__description {
+      display: inline-block;
+      background-color: $color-light;
+    }
+
+    .project-card__link {
+      display: inline-block;
+      background-color: $color-black;
+      color: $color-accent;
+
+      &:hover {
+        background-color: lighten($color-black, 20%);
+      }
+    }
+  }
+
+  &--project3 {
+    background-color: $color-black;
+
+    .project-card__title,
+    .project-card__description {
+      display: inline-block;
+      background-color: $color-light;
+    }
+
+    .project-card__link {
+      background-color: $color-light;
+      color: $color-black;
+
+      &:hover {
+        background-color: darken($color-light, 20%);
+      }
+    }
+  }
+
+  &--project4 {
+    background-color: $color-gray;
+
+    .project-card__title,
+    .project-card__description {
+      display: inline-block;
+      background-color: $color-accent;
+    }
+
+    .project-card__link {
+      display: inline-block;
+      background-color: $color-accent;
+      color: $color-black;
+
+      &:hover {
+        background-color: darken($color-accent, 20%);
+      }
+    }
+  }
+
+  &--project5 {
+    background-color: $color-accent;
+
+    .project-card__title,
+    .project-card__description {
+      display: inline-block;
+      background-color: $color-light;
+    }
+
+    .project-card__link {
+      display: inline-block;
+      background-color: $color-black;
+      color: $color-accent;
+
+      &:hover {
+        background-color: lighten($color-black, 20%);
+      }
+    }
+  }
+
+  &--project6 {
+    background-color: $color-black;
+
+    .project-card__title,
+    .project-card__description {
+      display: inline-block;
+      background-color: $color-accent;
+    }
+
+    .project-card__link {
+      background-color: $color-light;
+      color: $color-black;
+
+      &:hover {
+        background-color: darken($color-light, 20%);
+      }
+    }
+  }
+}

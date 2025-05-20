@@ -1,10 +1,8 @@
 @import 'variables';
 
 .card {
-  border: none;
-  border-radius: $border-radius-md;
+  border-radius: $border-radius-lg;
   box-shadow: $shadow-sm;
-  overflow: hidden;
   background-color: $color-gray;
   transition: box-shadow 0.3s ease;
 
@@ -12,30 +10,24 @@
     box-shadow: $shadow-md;
   }
 
-  .card-img-top {
-    border-bottom: 1px solid $color-gray;
+  .user-avatar {
     object-fit: cover;
-    width: 100%;
-    height: 180px;
+    border: 2px solid $color-gray;
   }
 
-  .card-body {
-    padding: $spacing-md;
+  .card-title {
+    font-size: $font-size-md;
+    font-weight: $font-weight-bold;
+    color: $color-text;
+  }
 
-    .card-title {
-      font-size: $font-size-lg;
-      font-weight: $font-weight-bold;
-      color: $color-text;
-      margin-bottom: $spacing-sm;
-    }
+  .card-position {
+    font-size: $font-size-sm;
+    color: $color-text;
+  }
 
-    .card-text {
-      font-size: $font-size-sm;
-      color: $color-gray;
-    }
-
-    .btn {
-      margin-top: $spacing-sm;
-    }
+  .btn {
+    padding: 0.25rem 0.75rem;
+    font-size: $font-size-sm;
   }
 }
