@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiGetEntity, apiUpdateEntity, apiDeleteEntity } from '../../api/api';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import NavigationBar from 'components/NavigationBar/NavigationBar';
+import Footer from 'components/Footer/Footer';
+import decoration from 'assets/decoration.svg';
+import './EditProjectPage.scss';
 
 const EditProjectPage = () => {
   const { id } = useParams();
@@ -65,46 +68,55 @@ const EditProjectPage = () => {
   }
 
   return (
-    <div className="container mt-5">
-      <h1 className="text-center mb-4">Редактирование проекта</h1>
+    <>
+      <NavigationBar />
 
-      {error && <div className="alert alert-danger">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
+      <div className="container mt-5">
+        <div className="card-block">
+          <form className="card-block__form">
+            <h2 className="card-block__header mb-4">Редактировать проект</h2>
 
-      {project && (
-        <form>
-          <div className="mb-3">
-            <label className="form-label">Название</label>
+            {error && <div className="text-danger fw-bold mb-3">{error}</div>}
+            {success && <div className="text-accent fw-bold mb-3">{success}</div>}
+
+            <label className="card-block__label">Название проекта</label>
             <input
               type="text"
-              className="form-control"
+              className="card-block__input"
               name="name"
               value={formData.name}
               onChange={handleChange}
+              placeholder="Введите название"
             />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Описание</label>
+
+            <label className="card-block__label">Описание проекта</label>
             <textarea
-              className="form-control"
+              className="card-block__textarea"
               name="description"
               value={formData.description}
               onChange={handleChange}
+              rows={4}
+              placeholder="Введите описание"
             />
-          </div>
 
-          {/* Кнопки действия */}
-          <div className="d-flex justify-content-between">
-            <button type="button" className="btn btn-success" onClick={handleSave}>
-              Сохранить
-            </button>
-            <button type="button" className="btn btn-danger" onClick={handleDelete}>
-              Удалить
-            </button>
+            <div className="d-flex gap-3 mt-4">
+              <button type="button" className="card-block__button" onClick={handleSave}>
+                Сохранить
+              </button>
+              <button type="button" className="card-block__button btn-accent" onClick={handleDelete}>
+                Удалить
+              </button>
+            </div>
+          </form>
+
+          <div className="card-block__decoration-wrapper">
+            <img src={decoration} alt="Decoration" className="card-block__image" />
           </div>
-        </form>
-      )}
-    </div>
+        </div>
+      </div>
+
+      <Footer />
+    </>
   );
 };
 

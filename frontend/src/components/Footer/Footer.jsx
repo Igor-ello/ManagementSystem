@@ -14,11 +14,10 @@ const Footer = () => {
         </Link>
 
         <nav className="footer-nav">
-          <a href="#">About us</a>
-          <a href="#">Services</a>
-          <a href="#">Use Cases</a>
-          <a href="#">Pricing</a>
-          <a href="#">Blog</a>
+          <a href="#">О нас</a>
+          <a href="#">Документация</a>
+          <a href="#">Сценарии использования</a>
+          <a href="#">Блог</a>
         </nav>
 
         <div className="footer-social">
@@ -30,7 +29,7 @@ const Footer = () => {
 
       <div className="footer-middle container">
         <div className="footer-contact">
-          <p className="footer-contact-label">Contact us:</p>
+          <p className="footer-contact-label">Связаться с нами:</p>
           <div className="contact-item">
             <Mail className="contact-icon" />
             <span>info@squadly.com</span>
@@ -47,7 +46,7 @@ const Footer = () => {
 
         <div className="footer-subscribe">
           <input type="email" placeholder="Email" />
-          <button>Subscribe to news</button>
+          <button>Подписаться на новости</button>
         </div>
       </div>
 

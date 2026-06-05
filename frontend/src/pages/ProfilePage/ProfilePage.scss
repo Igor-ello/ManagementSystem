@@ -1,0 +1,132 @@
+@import 'styles/variables';
+
+.profile-page {
+  padding-top: $spacing-xl;
+  padding-bottom: $spacing-xl;
+
+  .custom-card {
+    background-color: $color-bg;
+    border: 1px solid $color-gray;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-md;
+    padding: $spacing-xl;
+  }
+
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 3px solid $color-accent;
+    border-radius: 50%;
+  }
+
+  .btn-outline {
+    background-color: $color-bg;
+    color: $color-accent;
+    border: 2px solid $color-accent;
+    border-radius: $border-radius-sm;
+    padding: $spacing-sm $spacing-md;
+    font-family: $font-family-base;
+    font-weight: $font-weight-bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: $color-accent;
+      color: $color-dark;
+    }
+  }
+}
+
+.card-block {
+  display: flex;
+  justify-content: space-between;
+  background-color: $color-gray;
+  padding: $spacing-xl;
+  border-radius: $border-radius-md;
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  color: $color-text;
+
+  &__form {
+    flex: 1;
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  &__radio-group {
+    display: flex;
+    gap: $spacing-lg;
+    margin-bottom: $spacing-md;
+  }
+
+  &__radio {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-weight: $font-weight-regular;
+    font-size: $font-size-sm;
+
+    input[type="radio"] {
+      accent-color: $color-accent;
+      cursor: pointer;
+    }
+
+    &.selected {
+      font-weight: $font-weight-bold;
+    }
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+  }
+
+  &__input,
+  &__textarea {
+    padding: $spacing-sm;
+    border: 1px solid $color-text;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-base;
+    font-family: $font-family-base;
+    resize: none;
+
+    &::placeholder {
+      color: lighten($color-text, 30%);
+    }
+  }
+
+  &__button {
+    background-color: $color-dark;
+    color: $color-light;
+    font-size: $font-size-base;
+    font-weight: $font-weight-regular;
+    padding: $spacing-md;
+    border-radius: $border-radius-md;
+    border: none;
+    cursor: pointer;
+    box-shadow: $shadow-md;
+    transition: background 0.3s;
+
+    &:hover {
+      background-color: darken($color-dark, 5%);
+    }
+  }
+
+  &__decoration {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__image {
+    transform: translateX(50%);
+    max-height: 100%;
+    object-fit: contain;
+    margin-left: -#{$spacing-sm};
+    margin-right: -#{$spacing-sm};
+  }
+}

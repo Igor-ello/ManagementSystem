@@ -41,6 +41,7 @@ const NavigationBar = () => {
                     </ul>
 
                     <Link to="/profile" className="btn btn-light ms-3">Профиль</Link>
+                    <Link to="/login" className="btn btn-light ms-3" onClick={() => localStorage.removeItem('access_token')}>Выйти</Link>
                 </div>
             </div>
         </nav>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { apiGetProjects, apiGetTasks, apiGetUsers, apiGetProfile } from '../../api/api';
 import NavigationBar from 'components/NavigationBar/NavigationBar';
 import Footer from 'components/Footer/Footer';
@@ -16,12 +15,6 @@ const HomePage = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        localStorage.removeItem('access_token');
-        navigate('/login');
-    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -52,10 +45,6 @@ const HomePage = () => {
 
             <div className="homepage container">
                 <h1 className="text-center">Добро пожаловать, {user ? user.first_name : 'пользователь'}!</h1>
-
-                <div className="d-flex justify-content-between mb-4">
-                    <button className="btn btn-outline" onClick={handleLogout}>Выйти</button>
-                </div>
 
                 {loading && (
                     <div className="d-flex justify-content-center align-items-center" style={{ height: '50vh' }}>
